@@ -1,0 +1,8 @@
+index:
+    path: /
+    controller: App\Controller\EmpleadosController::index
+
+home:
+    path: adminlte_welcome
+
+    
