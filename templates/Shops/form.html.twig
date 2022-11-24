@@ -1,0 +1,79 @@
+{% extends 'Layouts/header.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="h3 mb-2 text-gray-800">Tiendas</h1>
+		<p class="mb-4">Informacion de tiendas</p>
+
+
+		<div class='card'>
+			<div class='card-body'>
+				<form method="POST" action='{{ (data is null)? path('create_shop'): path('update_shop', {id: data.id}) }}'>
+					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+
+					<div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<div class='form-group'>
+									<label for='email'>Nombre</label>
+									<input type='text' class='form-control' name='name' value='{{ (data is null)? '': data.name }}' required/>
+								</div>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='lastname'>Número Identificación</label>
+								<input type='text' class='form-control' name='numeroIdentificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Agente retencion</label>
+								<input type='text' class='form-control' name='agenteRetencion' value='{{ (data is null)? '': data.getAgenteRetencion() }}' required/>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Email</label>
+								<input type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}'/>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-12'>
+							<div class='form-group'>
+								<label for='email'>Direccion</label>
+								<input type='text' class='form-control' name='address' value='{{ (data is null)? '': data.getDireccionMatriz() }}'/>
+							</div>
+						</div>
+					</div>
+					<div class='row'>
+						<div class='col-sm-12'>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name='contribuyenteEspecial' id="inlineCheckbox1" value="1" {{(data.getContribuyenteEspecial())? 'checked': ''}}>
+								<label class="form-check-label" for="inlineCheckbox1">Contribuyente especial</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name='regimenRimpe' id="inlineCheckbox2" value="1" {{(data.isRegimenRimpe())? 'checked': ''}}>
+								<label class="form-check-label" for="inlineCheckbox2">Regimen Rimpe</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<input class="form-check-input" type="checkbox" name='obligadoContabilidad' id="inlineCheckbox3" value="1" {{(data.isObligadoContabilidad())? 'checked': ''}}>
+								<label class="form-check-label" for="inlineCheckbox3">Obligado a contabilidad</label>
+							</div>
+						</div>
+					</div>
+
+
+					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+
+
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

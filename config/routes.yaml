@@ -61,10 +61,31 @@ delete_customer:
 list_shopgroup:
     path: /shopgroup/list
     controller: App\Controller\ShopGroupController::index
-
+#Shops
 list_shop:
-    path: /shop/list
+    path: /tienda/lista
     controller: App\Controller\ShopController::index
+
+show_form_shop:
+    path: /tienda/registro/{id}
+    controller: App\Controller\ShopController::showForm
+    defaults:
+        id: null
+
+create_shop:
+    path: /tienda/crear
+    controller: App\Controller\ShopController::create
+    methods: POST
+
+update_shop:
+    path: /tienda/actualizar/{id}
+    controller: App\Controller\ShopController::update
+    methods: [POST]
+
+delete_shop:
+    path: /tienda/eliminar/{id}
+    controller: App\Controller\ShopController::delete
+    methods: [GET]
 
 list_product:
     path: /product/list

@@ -63,7 +63,7 @@ class Shop
     /**
      * @ORM\Column(type="boolean")
      */
-    private $active;
+    private $active = 1;
 
     /**
      * @ORM\OneToMany(targetEntity=Venta::class, mappedBy="shop_id")
