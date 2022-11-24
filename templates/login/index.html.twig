@@ -1,0 +1,21 @@
+{% extends '@AdminLTE/layout/security-layout.html.twig' %}
+
+{% block login_box %}
+
+    {% block login_box_msg %} Bienvenido {% endblock %}
+
+    {% block login_form %}
+    
+        <div class=''>
+            <div class='row'>
+                <div class='col-sm-12'>
+                    <input class = 'form-control' type='text' name='email' placeholder='ejemplo@ejemplo.com' />
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+
+{% endblock %}
+
+

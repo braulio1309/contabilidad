@@ -1,0 +1,49 @@
+{% extends 'Layouts/base.html.twig' %}
+
+{% block body %}
+
+	{% block page_title %}
+		Grupos de tiendas
+	{% endblock %}
+	{% block page_subtitle %}
+		Información básica de Grupos de tiendas
+	{% endblock %}
+	{% block page_content %}
+		<div class='card'>
+
+			<div class='row'>
+				<div class='col-sm-12'>
+					<div id="data">Loading...</div>
+
+
+				</div>
+			</div>
+		</div>
+		<!-- Insert this at the end of your body element, but before the closing tag -->
+
+
+		{% block javascripts %}
+			<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js" defer></script>
+			<script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
+
+			<script>
+				$(function () {
+
+                    $('#data').initDataTables({{ datatable_settings(datatable) }}, {
+                            searching: true,
+                        dom: '<"html5buttons"B>lTfgitp',
+                        buttons: [
+                        'copy', {
+                        extend: 'pdf',
+                        title: 'domains'
+                        }, {
+                        extend: 'print'
+                    }]
+                        });
+                    });
+			</script>
+
+		{% endblock %}
+	{% endblock %}
+
+{% endblock %}

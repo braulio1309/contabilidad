@@ -1,0 +1,58 @@
+{% extends 'Layouts/header.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="h3 mb-2 text-gray-800">Tiendas</h1>
+		<p class="mb-4">Informacion de tiendas</p>
+	</a>.</p>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+	<div class="card-header py-3">
+		<h6 class="m-0 font-weight-bold text-primary">DataTables Example</h6>
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+				<thead>
+					<tr>
+						<th>#</th>
+						<th>Nombre</th>
+						<th>Identificacion</th>
+						<th>Email</th>
+						<th>Contribuyente</th>
+						<th>Acciones</th>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<th>#</th>
+						<th>Nombre</th>
+						<th>Identificacion</th>
+						<th>Email</th>
+						<th>Contribuyente</th>
+						<th>Acciones</th>
+					</tr>
+				</tfoot>
+				<tbody>
+					{% for row in data %}
+
+						<tr>
+							<td>{{row.id}}</td>
+							<td>{{row.name}}</td>
+							<td>{{row.numero_identificacion}}</td>
+							<td>{{row.email}}</td>
+							<td>{{row.contribuyente_especial}}</td>
+							<td>$320,800</td>
+						</tr>
+					{% endfor %}
+
+
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div></div><script>
+$(document).ready(function () {
+$('#example').DataTable();
+});</script>{% endblock %}

@@ -38,17 +38,8 @@
             "./migrations/.gitignore"
         ]
     },
-    "kevinpapst/adminlte-bundle": {
-        "version": "3.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "0.9",
-            "ref": "36a77f782cd6f7cd761384c6a301fedf018e37e5"
-        },
-        "files": [
-            "./config/packages/admin_lte.yaml"
-        ]
+    "friendsofsymfony/user-bundle": {
+        "version": "v3.1.0"
     },
     "knplabs/knp-menu-bundle": {
         "version": "v3.2.0"
@@ -305,6 +296,9 @@
         "files": [
             "./config/packages/messenger.yaml"
         ]
+    },
+    "symfonycasts/verify-email-bundle": {
+        "version": "v1.12.0"
     },
     "twig/extra-bundle": {
         "version": "v3.4.0"

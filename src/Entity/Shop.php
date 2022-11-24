@@ -75,10 +75,16 @@ class Shop
      */
     private $employeeShopgroupShops;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ShopSerie::class, mappedBy="shop_id")
+     */
+    private $shopSeries;
+
     public function __construct()
     {
         $this->ventas = new ArrayCollection();
         $this->employeeShopgroupShops = new ArrayCollection();
+        $this->shopSeries = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -246,6 +252,36 @@ class Shop
     {
         if ($this->employeeShopgroupShops->removeElement($employeeShopgroupShop)) {
             $employeeShopgroupShop->removeShopId($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ShopSerie>
+     */
+    public function getShopSeries(): Collection
+    {
+        return $this->shopSeries;
+    }
+
+    public function addShopSeries(ShopSerie $shopSeries): self
+    {
+        if (!$this->shopSeries->contains($shopSeries)) {
+            $this->shopSeries[] = $shopSeries;
+            $shopSeries->setShopId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShopSeries(ShopSerie $shopSeries): self
+    {
+        if ($this->shopSeries->removeElement($shopSeries)) {
+            // set the owning side to null (unless already changed)
+            if ($shopSeries->getShopId() === $this) {
+                $shopSeries->setShopId(null);
+            }
         }
 
         return $this;

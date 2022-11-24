@@ -1,8 +1,55 @@
-index:
-    path: /
-    controller: App\Controller\EmpleadosController::index
-
 home:
     path: adminlte_welcome
+# Employees
+index:
+    path: /
+    controller: App\Controller\EmployeeController::index
+
+list_employees:
+    path: /empleado/lista
+    controller: App\Controller\EmployeeController::index
+
+show_form:
+    path: /empleado/registro/{id}
+    controller: App\Controller\EmployeeController::showForm
+    defaults:
+        id: null
+
+create_employee:
+    path: /empleado/crear
+    controller: App\Controller\EmployeeController::create
+    methods: POST
+
+update_employee:
+    path: /empleado/actualizar/{id}
+    controller: App\Controller\EmployeeController::update
+    methods: [POST]
+
+delete_employee:
+    path: /empleado/eliminar/{id}
+    controller: App\Controller\EmployeeController::delete
+    methods: [GET]
+
+# Customers   
+list_customer:
+    path: /customer/list
+    controller: App\Controller\CustomerController::index
+
+#ShopGroups
+list_shopgroup:
+    path: /shopgroup/list
+    controller: App\Controller\ShopGroupController::index
+
+list_shop:
+    path: /shop/list
+    controller: App\Controller\ShopController::index
+
+list_product:
+    path: /product/list
+    controller: App\Controller\ProductController::index
+
+login:
+    path: /login
+    controller: App\Controller\SecurityController::loginAction
 
     

@@ -18,12 +18,13 @@ class MenuBuilderSubscriber implements EventSubscriberInterface
     public function onSetupMenu(SidebarMenuEvent $event)
     {
         $user = new MenuItemModel('user', 'Usuarios', 'home', [], 'fas fa-tachometer-alt');
-        $empleados = new MenuItemModel('Empleados', 'Empleados', 'home', [], 'fas fa-tachometer-alt');
+        $empleados = new MenuItemModel('Empleados', 'Empleados', 'list_employees', [], 'fas fa-tachometer-alt');
         $groups = new MenuItemModel('grupos', 'Grupos', 'home', [], 'fas fa-tachometer-alt');
-        $shop = new MenuItemModel('tiendas', 'Tiendas', 'home', [], 'fas fa-tachometer-alt');
+        $shop = new MenuItemModel('Tiendas', 'Tiendas', 'list_shop', [], 'fas fa-tachometer-alt');
         $series = new MenuItemModel('series', 'Series', 'home', [], 'fas fa-tachometer-alt');
-        $clients = new MenuItemModel('Clients', 'Clientes', 'home', [], 'fas fa-tachometer-alt');
-        $products = new MenuItemModel('Product', 'Productos', 'home', [], 'fas fa-tachometer-alt');
+        $clients = new MenuItemModel('Clients', 'Clientes', 'list_customer', [], 'fas fa-tachometer-alt');
+        $shopGroups = new MenuItemModel('ShopGroups', 'Shopgroups', 'list_shopgroup', [], 'fas fa-tachometer-alt');
+        $products = new MenuItemModel('Product', 'Productos', 'list_product', [], 'fas fa-rss-square');
         $buy = new MenuItemModel('Ventas', 'Ventas', 'home', [], 'fas fa-tachometer-alt');
 
         /*$blog->addChild(
@@ -39,6 +40,8 @@ class MenuBuilderSubscriber implements EventSubscriberInterface
         $event->addItem($series);
         $event->addItem($clients);
         $event->addItem($products);
+        $event->addItem($shopGroups);
+
         $event->addItem($buy);
 
 
