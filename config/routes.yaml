@@ -32,8 +32,30 @@ delete_employee:
 
 # Customers   
 list_customer:
-    path: /customer/list
+    path: /cliente/lista
     controller: App\Controller\CustomerController::index
+
+show_form_customer:
+    path: /cliente/registro/{id}
+    controller: App\Controller\CustomerController::showForm
+    defaults:
+        id: null
+
+create_customer:
+    path: /cliente/crear
+    controller: App\Controller\CustomerController::create
+    methods: POST
+
+update_customer:
+    path: /cliente/actualizar/{id}
+    controller: App\Controller\CustomerController::update
+    methods: [POST]
+
+delete_customer:
+    path: /cliente/eliminar/{id}
+    controller: App\Controller\CustomerController::delete
+    methods: [GET]
+
 
 #ShopGroups
 list_shopgroup:

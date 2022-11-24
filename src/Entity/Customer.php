@@ -6,6 +6,7 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="customers")
@@ -21,17 +22,22 @@ class Customer
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=2, nullable=true)
+     * @ORM\Column(type="string", length=30, nullable=true)
+     * @Assert\NotBlank
+     * @Assert\Choice({"RUC", "Pasaporte", "Consumidor final", "Cedula"})
      */
     private $tipo_identificacion;
 
     /**
      * @ORM\Column(type="string", length=15)
+     * @Assert\NotBlank
+     * 
      */
     private $numero_identificacion;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
      */
     private $company;
 
@@ -42,11 +48,14 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     * 
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=32, nullable=true)
+     * @Assert\NotBlank
      */
     private $phone;
 
@@ -111,7 +120,7 @@ class Customer
         return $this->address1;
     }
 
-    public function setAddress1(string $address1): self
+    public function setAddress1($address1): self
     {
         $this->address1 = $address1;
 

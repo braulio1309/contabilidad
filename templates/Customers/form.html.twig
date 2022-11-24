@@ -1,0 +1,80 @@
+{% extends 'Layouts/header.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="h3 mb-2 text-gray-800">Clientes</h1>
+		<p class="mb-4">Informacion de cliente</p>
+
+
+		<div class='card'>
+			<div class='card-body'>
+				<form method="POST" action='{{ (data is null)? path('create_customer'): path('update_customer', {id: data.id}) }}'>
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+
+					<div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='name'>Tipo Identificación</label>
+								<select class='form-control' name='tipo_identificacion'>
+                                    <option value='RUC'>RUC</option>
+                                    <option value='Pasaporte'>Pasaporte</option>
+                                    <option value='Cedula'>Cedula</option>
+                                    <option value='Consumidor final'>Consumidor final</option>
+                                </select>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='lastname'>Número Identificación</label>
+								<input type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Cliente</label>
+								<input type='text' class='form-control' name='customer' value='{{ (data is null)? '': data.company }}' required/>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Email</label>
+								<input type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}'/>
+							</div>
+						</div>
+					</div>
+
+                    <div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Telefono</label>
+								<input type='text' class='form-control' name='phone' value='{{ (data is null)? '': data.phone }}' required/>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Ciudad</label>
+								<input type='text' class='form-control' name='city' value='{{ (data is null)? '': data.city }}'/>
+							</div>
+						</div>
+					</div>
+
+                    <div class='row'>
+						<div class='col-sm-12'>
+							<div class='form-group'>
+								<label for='email'>Direccion</label>
+								<input type='email' class='form-control' name='address' value='{{ (data is null)? '': data.address1 }}' />
+							</div>
+						</div>
+					</div>
+
+                    <input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+
+
+				</form>
+			</div>
+		</div>
+    </div>
+	{% endblock %}
