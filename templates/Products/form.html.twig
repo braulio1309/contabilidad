@@ -1,0 +1,75 @@
+{% extends 'Layouts/header.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="h3 mb-2 text-gray-800">Productos</h1>
+		<p class="mb-4">Informacion de productos</p>
+
+
+		<div class='card'>
+			<div class='card-body'>
+				<form id='products' method="POST" action='{{ (data is null)? path('create_product'): path('update_product', {id: data.id}) }}'>
+					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+
+					<div class='row'>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<div class='form-group'>
+									<label for='email'>Nombre</label>
+									<input type='text' class='form-control' name='name' value='{{ (data is null)? '': data.name }}' required/>
+								</div>
+							</div>
+						</div>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='lastname'>Codigo</label>
+								<input type='text' class='form-control' name='code' value='{{ (data is null)? '': data.code }}' required/>
+							</div>
+						</div>
+
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='lastname'>Precio</label>
+								<input type='number' class='form-control' name='price' step="0.01" value='{{ (data is null)? '': data.price }}' required/>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-12'>
+							<div class='form-group'>
+								<label for='email'>Descripción</label>
+                                <textarea class="form-control" name="description" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.description }}</textarea>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 1</label>
+                                <textarea class="form-control" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
+							</div>
+						</div>
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 2</label>
+                                <textarea class="form-control" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
+							</div>
+						</div>
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 3</label>
+                                <textarea class="form-control" name="description3" form="products" rows="3" placeholder='Descripcion' >{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
+							</div>
+						</div>
+					</div>
+
+					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+
+
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}

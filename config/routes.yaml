@@ -56,6 +56,31 @@ delete_customer:
     controller: App\Controller\CustomerController::delete
     methods: [GET]
 
+#Products
+list_product:
+    path: /productos/lista
+    controller: App\Controller\ProductController::index
+
+show_form_product:
+    path: /producto/registro/{id}
+    controller: App\Controller\ProductController::showForm
+    defaults:
+        id: null
+
+create_product:
+    path: /producto/crear
+    controller: App\Controller\ProductController::create
+    methods: POST
+
+update_product:
+    path: /producto/actualizar/{id}
+    controller: App\Controller\ProductController::update
+    methods: [POST]
+
+delete_product:
+    path: /producto/eliminar/{id}
+    controller: App\Controller\ProductController::delete
+    methods: [GET]
 
 #ShopGroups
 list_shopgroup:
@@ -86,10 +111,6 @@ delete_shop:
     path: /tienda/eliminar/{id}
     controller: App\Controller\ShopController::delete
     methods: [GET]
-
-list_product:
-    path: /product/list
-    controller: App\Controller\ProductController::index
 
 login:
     path: /login

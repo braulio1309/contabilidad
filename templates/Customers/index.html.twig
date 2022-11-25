@@ -4,8 +4,6 @@
 	<div class="container-fluid">
 		<h1 class="h3 mb-2 text-gray-800">Clientes</h1>
 		<p class="mb-4">Informacion de clientes</p>
-	</a>
-</p>
 
 	<a href='{{ path('show_form_customer') }}' class='btn btn-primary mb-4'>Nuevo</a>
 	{% for message in app.session.flashbag.get('success') %}
