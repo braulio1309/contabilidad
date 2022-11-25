@@ -84,8 +84,56 @@ delete_product:
 
 #ShopGroups
 list_shopgroup:
-    path: /shopgroup/list
+    path: /shopgroup/lista
     controller: App\Controller\ShopGroupController::index
+
+show_form_shopgroup:
+    path: /shopgroup/registro/{id}
+    controller: App\Controller\ShopGroupController::showForm
+    defaults:
+        id: null
+
+create_shopgroup:
+    path: /shopgroup/crear
+    controller: App\Controller\ShopGroupController::create
+    methods: POST
+
+update_shopgroup:
+    path: /shopgroup/actualizar/{id}
+    controller: App\Controller\ShopGroupController::update
+    methods: [POST]
+
+delete_shopgroup:
+    path: /shopgroup/eliminar/{id}
+    controller: App\Controller\ShopGroupController::delete
+    methods: [GET]
+
+#ShopSeries
+list_shopseries:
+    path: /shopseries/lista
+    controller: App\Controller\ShopSeriesController::index
+
+show_form_shopseries:
+    path: /shopseries/registro/{id}
+    controller: App\Controller\ShopSeriesController::showForm
+    defaults:
+        id: null
+
+create_shopseries:
+    path: /shopseries/crear
+    controller: App\Controller\ShopSeriesController::create
+    methods: POST
+
+update_shopseries:
+    path: /shopseries/actualizar/{id}
+    controller: App\Controller\ShopSeriesController::update
+    methods: [POST]
+
+delete_shopseries:
+    path: /shopseries/eliminar/{id}
+    controller: App\Controller\ShopSeriesController::delete
+    methods: [GET]
+
 #Shops
 list_shop:
     path: /tienda/lista

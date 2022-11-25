@@ -54,15 +54,15 @@
 					<div class='row'>
 						<div class='col-sm-12'>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name='contribuyenteEspecial' id="inlineCheckbox1" value="1" {{(data.getContribuyenteEspecial())? 'checked': ''}}>
+								<input class="form-check-input" type="checkbox" name='contribuyenteEspecial' id="inlineCheckbox1" value="1" {{(data is not null and data.getContribuyenteEspecial())? 'checked': ''}}>
 								<label class="form-check-label" for="inlineCheckbox1">Contribuyente especial</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name='regimenRimpe' id="inlineCheckbox2" value="1" {{(data.isRegimenRimpe())? 'checked': ''}}>
+								<input class="form-check-input" type="checkbox" name='regimenRimpe' id="inlineCheckbox2" value="1" {{(data is not null and data.isRegimenRimpe())? 'checked': ''}}>
 								<label class="form-check-label" for="inlineCheckbox2">Regimen Rimpe</label>
 							</div>
 							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name='obligadoContabilidad' id="inlineCheckbox3" value="1" {{(data.isObligadoContabilidad())? 'checked': ''}}>
+								<input class="form-check-input" type="checkbox" name='obligadoContabilidad' id="inlineCheckbox3" value="1" {{(data is not null and data.isObligadoContabilidad())? 'checked': ''}}>
 								<label class="form-check-label" for="inlineCheckbox3">Obligado a contabilidad</label>
 							</div>
 						</div>

@@ -62,7 +62,7 @@ class VentaDetail
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
      */
-    private $product_prie;
+    private $product_price;
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)

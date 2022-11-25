@@ -80,6 +80,8 @@ class Shop
      */
     private $shopSeries;
 
+    
+
     public function __construct()
     {
         $this->ventas = new ArrayCollection();

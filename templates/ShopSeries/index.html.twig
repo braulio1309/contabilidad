@@ -2,10 +2,10 @@
 
 {% block body %}
 	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">ShopGroup</h1>
-		<p class="mb-4">Informacion de ShopGroup</p>
+		<h1 class="h3 mb-2 text-gray-800">ShopSerie</h1>
+		<p class="mb-4">Informacion de ShopSerie</p>
 
-		<a href='{{ path('show_form_shopgroup') }}' class='btn btn-primary mb-4'>Nuevo</a>
+		<a href='{{ path('show_form_shopseries') }}' class='btn btn-primary mb-4'>Nuevo</a>
 		{% for message in app.session.flashbag.get('success') %}
 			<div class="alert alert-success" role="alert">
 				{{message}}
@@ -18,7 +18,7 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">ShopGroup</h6>
+				<h6 class="m-0 font-weight-bold text-primary">ShopSerie</h6>
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
@@ -27,6 +27,11 @@
 							<tr>
 								<th>#</th>
 								<th>Nombre</th>
+                                <th>Tienda</th>
+								<th>Tipo Documento</th>
+								<th>Serie</th>
+								<th>Secuencia</th>
+								<th>Dirección</th>
 								<th>Acciones</th>
 							</tr>
 						</thead>
@@ -34,6 +39,11 @@
 							<tr>
 								<th>#</th>
 								<th>Nombre</th>
+                                <th>Tienda</th>
+								<th>Tipo Documento</th>
+								<th>Serie</th>
+								<th>Secuencia</th>
+								<th>Dirección</th>
 								<th>Acciones</th>
 							</tr>
 						</tfoot>
@@ -42,11 +52,17 @@
 
 								<tr>
 									<td>{{row.id}}</td>
-									<td>{{row.name}}</td>
+									<td>{{row.getNombreComercial()}}</td>
+                                    <td>{{row.getShopId().name}}</td>
+									<td>{{row.getTipoDocumento()}}</td>
+									<td>{{row.serie}}</td>
+									<td>{{row.secuencia}}</td>
+									<td>{{row.getDireccionEstablecimiento()}}</td>
+
 									<td>
 										<div class='row'>
 											<div class'col-sm-6'>
-												<a href='{{ path('show_form_shopgroup', {id: row.id})}}' class='btn btn-success'>Editar</a>
+												<a href='{{ path('show_form_shopseries', {id: row.id})}}' class='btn btn-success'>Editar</a>
 											</div>
 											<div class'col-sm-6'>
 												<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{row.id}}">
@@ -71,22 +87,23 @@
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-												<a href='{{ path('delete_shopgroup', {id: row.id })}}' type="button" class="btn btn-danger">Eliminar</a>
+												<a href='{{ path('delete_shopseries', {id: row.id })}}' type="button" class="btn btn-danger">Eliminar</a>
 											</div>
 										</div>
 									</div>
 								</div>
-						{% endfor %}
+							{% endfor %}
 
 
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<script>
-	$(document).ready(function () {
+	<script>
+		$(document).ready(function () {
 $('#example').DataTable();
 });
-</script>{% endblock %}
+	</script>
+{% endblock %}
