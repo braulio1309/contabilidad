@@ -12,10 +12,15 @@ use App\Repository\EmployeeRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-
+use Symfony\Component\Security\Core\Security;
 
 class EmployeeController extends AbstractController
 {
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     
     public function index(Request $request, ManagerRegistry $doctrine)
     {

@@ -58,10 +58,16 @@ PasswordHasherAwareInterface
      */
     private $active = 1;
 
+
     /**
      * @ORM\ManyToMany(targetEntity=EmployeeShopgroupShop::class, mappedBy="employee_id")
      */
     private $employeeShopgroupShops;
+
+    /**
+     * @ORM\Column(type="json", nullable=true)
+     */
+    private $roles = [];
 
     public function __construct()
     {

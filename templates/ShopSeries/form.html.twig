@@ -23,9 +23,9 @@
 							<div class='form-group'>
 								<label for='email'>Tienda</label>
 								<select class='form-control' name='shop'>
-                                	{% for row in shops %}
-									    <option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
-                                    {% endfor %}
+									{% for row in shops %}
+										<option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
+									{% endfor %}
 								</select>
 							</div>
 						</div>
@@ -34,10 +34,13 @@
 					<div class='row'>
 						<div class='col-sm-4'>
 							<div class='form-group'>
-								<div class='form-group'>
-									<label for='email'>Tipo documento</label>
-									<input type='text' class='form-control' name='tipoDocumento' value='{{ (data is null)? '': data.getTipoDocumento() }}' required/>
-								</div>
+								<label for='name'>Tipo Identificación</label>
+								<select class='form-control' name='tipoDocumento'>
+									<option value='RUC'>RUC</option>
+									<option value='Pasaporte'>Pasaporte</option>
+									<option value='Cedula'>Cedula</option>
+									<option value='Consumidor final'>Consumidor final</option>
+								</select>
 							</div>
 						</div>
 

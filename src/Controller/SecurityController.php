@@ -13,6 +13,7 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -26,47 +27,28 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
-    private $authenticationUtils;
-    private $tokenManager;
-
-    public function __construct(AuthenticationUtils $authenticationUtils, CsrfTokenManagerInterface $tokenManager = null)
+    /**
+     * @Route("/login", name="app_login")
+     */
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $this->authenticationUtils = $authenticationUtils;
-        $this->tokenManager = $tokenManager;
-    }
+        // if ($this->getUser()) {
+        //     return $this->redirectToRoute('target_path');
+        // }
 
-    public function loginAction(): Response
-    {
-        $error = $this->authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $this->authenticationUtils->getLastUsername();
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
 
-        $csrfToken = $this->tokenManager
-            ? $this->tokenManager->getToken('authenticate')->getValue()
-            : null;
-
-        return $this->renderLogin([
-            'last_username' => $lastUsername,
-            'error' => $error,
-            'csrf_token' => $csrfToken,
-        ]);
-    }
-
-    public function checkAction()
-    {
-        throw new \RuntimeException('You must configure the check path to be handled by the firewall using form_login in your security firewall configuration.');
-    }
-
-    public function logoutAction()
-    {
-        throw new \RuntimeException('You must activate the logout in your security firewall configuration.');
+        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
     /**
-     * Renders the login template with the given parameters. Overwrite this function in
-     * an extended controller to provide additional data for the login template.
+     * @Route("/logout", name="app_logout")
      */
-    protected function renderLogin(array $data): Response
+    public function logout(): void
     {
-        return $this->render('@FOSUser/Security/login.html.twig', $data);
+        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

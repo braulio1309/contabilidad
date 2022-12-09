@@ -6,162 +6,173 @@ index:
     controller: App\Controller\EmployeeController::index
 
 list_employees:
-    path: /empleado/lista
+    path: /admin/empleado/lista
     controller: App\Controller\EmployeeController::index
 
 show_form:
-    path: /empleado/registro/{id}
+    path: /admin/empleado/registro/{id}
     controller: App\Controller\EmployeeController::showForm
     defaults:
         id: null
 
 create_employee:
-    path: /empleado/crear
+    path: /admin/empleado/crear
     controller: App\Controller\EmployeeController::create
     methods: POST
 
 update_employee:
-    path: /empleado/actualizar/{id}
+    path: /admin/empleado/actualizar/{id}
     controller: App\Controller\EmployeeController::update
     methods: [POST]
 
 delete_employee:
-    path: /empleado/eliminar/{id}
+    path: /admin/empleado/eliminar/{id}
     controller: App\Controller\EmployeeController::delete
     methods: [GET]
 
 # Customers   
 list_customer:
-    path: /cliente/lista
+    path: /admin/cliente/lista
     controller: App\Controller\CustomerController::index
 
 show_form_customer:
-    path: /cliente/registro/{id}
+    path: /admin/cliente/registro/{id}
     controller: App\Controller\CustomerController::showForm
     defaults:
         id: null
 
 create_customer:
-    path: /cliente/crear
+    path: /admin/cliente/crear
     controller: App\Controller\CustomerController::create
     methods: POST
 
 update_customer:
-    path: /cliente/actualizar/{id}
+    path: /admin/cliente/actualizar/{id}
     controller: App\Controller\CustomerController::update
     methods: [POST]
 
 delete_customer:
-    path: /cliente/eliminar/{id}
+    path: /admin/cliente/eliminar/{id}
     controller: App\Controller\CustomerController::delete
     methods: [GET]
 
 #Products
 list_product:
-    path: /productos/lista
+    path: /admin/productos/lista
     controller: App\Controller\ProductController::index
 
 show_form_product:
-    path: /producto/registro/{id}
+    path: /admin/producto/registro/{id}
     controller: App\Controller\ProductController::showForm
     defaults:
         id: null
 
 create_product:
-    path: /producto/crear
+    path: /admin/producto/crear
     controller: App\Controller\ProductController::create
     methods: POST
 
 update_product:
-    path: /producto/actualizar/{id}
+    path: /admin/producto/actualizar/{id}
     controller: App\Controller\ProductController::update
     methods: [POST]
 
 delete_product:
-    path: /producto/eliminar/{id}
+    path: /admin/producto/eliminar/{id}
     controller: App\Controller\ProductController::delete
     methods: [GET]
 
 #ShopGroups
 list_shopgroup:
-    path: /shopgroup/lista
+    path: /admin/shopgroup/lista
     controller: App\Controller\ShopGroupController::index
 
 show_form_shopgroup:
-    path: /shopgroup/registro/{id}
+    path: /admin/shopgroup/registro/{id}
     controller: App\Controller\ShopGroupController::showForm
     defaults:
         id: null
 
 create_shopgroup:
-    path: /shopgroup/crear
+    path: /admin/shopgroup/crear
     controller: App\Controller\ShopGroupController::create
     methods: POST
 
 update_shopgroup:
-    path: /shopgroup/actualizar/{id}
+    path: /admin/shopgroup/actualizar/{id}
     controller: App\Controller\ShopGroupController::update
     methods: [POST]
 
 delete_shopgroup:
-    path: /shopgroup/eliminar/{id}
+    path: /admin/shopgroup/eliminar/{id}
     controller: App\Controller\ShopGroupController::delete
     methods: [GET]
 
 #ShopSeries
 list_shopseries:
-    path: /shopseries/lista
+    path: /admin/shopseries/lista
     controller: App\Controller\ShopSeriesController::index
 
 show_form_shopseries:
-    path: /shopseries/registro/{id}
+    path: /admin/shopseries/registro/{id}
     controller: App\Controller\ShopSeriesController::showForm
     defaults:
         id: null
 
 create_shopseries:
-    path: /shopseries/crear
+    path: /admin/shopseries/crear
     controller: App\Controller\ShopSeriesController::create
     methods: POST
 
 update_shopseries:
-    path: /shopseries/actualizar/{id}
+    path: /admin/shopseries/actualizar/{id}
     controller: App\Controller\ShopSeriesController::update
     methods: [POST]
 
 delete_shopseries:
-    path: /shopseries/eliminar/{id}
+    path: /admin/shopseries/eliminar/{id}
     controller: App\Controller\ShopSeriesController::delete
     methods: [GET]
 
 #Shops
 list_shop:
-    path: /tienda/lista
+    path: /admin/tienda/lista
     controller: App\Controller\ShopController::index
 
 show_form_shop:
-    path: /tienda/registro/{id}
+    path: /admin/tienda/registro/{id}
     controller: App\Controller\ShopController::showForm
     defaults:
         id: null
 
 create_shop:
-    path: /tienda/crear
+    path: /admin/tienda/crear
     controller: App\Controller\ShopController::create
     methods: POST
 
 update_shop:
-    path: /tienda/actualizar/{id}
+    path: /admin/tienda/actualizar/{id}
     controller: App\Controller\ShopController::update
     methods: [POST]
 
 delete_shop:
-    path: /tienda/eliminar/{id}
+    path: /admin/tienda/eliminar/{id}
     controller: App\Controller\ShopController::delete
     methods: [GET]
 
-login:
-    path: /login
-    controller: App\Controller\SecurityController::loginAction
+
+
+#Sales
+list_sales:
+    path: /admin/ventas/lista
+    controller: App\Controller\SaleController::index
+
+show_form_sale:
+    path: /admin/venta/registro/{id}
+    controller: App\Controller\SaleController::showForm
+    defaults:
+        id: null
+
+
 
     

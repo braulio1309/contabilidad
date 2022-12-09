@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
-class ShopgroupController extends AbstractController
+class ShopGroupController extends AbstractController
 {
     
     public function index(Request $request, ManagerRegistry $doctrine)

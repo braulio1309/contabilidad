@@ -44,7 +44,7 @@ class CustomerController extends AbstractController
         
         $email = $request->get('email');
         $company = $request->get('customer');
-        $address = $request->get('address1');
+        $address = $request->get('address');
         $tipoIdentificacion = $request->get('tipo_identificacion');
         $numeroIdentificacion = $request->get('numero_identificacion');
         $city = $request->get('city');

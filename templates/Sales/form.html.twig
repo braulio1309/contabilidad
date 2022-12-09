@@ -1,0 +1,93 @@
+{% extends 'Layouts/header.html.twig' %}
+
+{% block body %}
+	<div class="container-fluid">
+		<h1 class="h3 mb-2 text-gray-800">Ventas</h1>
+		<p class="mb-4">Informacion de ventas</p>
+
+
+		<div class='card'>
+			<div class='card-body'>
+				<form id='products' method="POST" action='{{ (data is null)? path('create_product'): path('update_product', {id: data.id}) }}'>
+					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+
+					<div class='row'>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='name'>Tipo Identificación</label>
+								<select class='form-control' name='tipo_identificacion'>
+                                    <option value='RUC'>RUC</option>
+                                    <option value='Pasaporte'>Pasaporte</option>
+                                    <option value='Cedula'>Cedula</option>
+                                    <option value='Consumidor final'>Consumidor final</option>
+                                </select>
+							</div>
+						</div>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='lastname'>Número Identificación</label>
+								<input type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+							</div>
+						</div>
+
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='lastname'>Email</label>
+								<input type='email' class='form-control' name='email'  value='{{ (data is null)? '': data.email }}' required/>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Tienda</label>
+								<select class='form-control' name='shop'>
+                                	{% for row in shops %}
+									    <option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
+                                    {% endfor %}
+								</select>
+							</div>
+						</div>
+
+                        <div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='email'>Cliente</label>
+								<select class='form-control' name='customer'>
+                                	{% for row in customers %}
+									    <option value='{{row.id}}' {{(data is not null and data.getCustomerId().id is same as(row.id))? 'selected': ''}}>{{row.company}}</option>
+                                    {% endfor %}
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class='row'>
+						<div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 1</label>
+                                <textarea class="form-control" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
+							</div>
+						</div>
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 2</label>
+                                <textarea class="form-control" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
+							</div>
+						</div>
+                        <div class='col-sm-4'>
+							<div class='form-group'>
+								<label for='email'>Descripción adicional 3</label>
+                                <textarea class="form-control" name="description3" form="products" rows="3" placeholder='Descripcion' >{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
+							</div>
+						</div>
+					</div>
+
+					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+
+
+				</form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
