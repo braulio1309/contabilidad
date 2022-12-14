@@ -32,7 +32,7 @@ class Venta
     private $customer_id;
 
     /**
-     * @ORM\Column(type="string", length=5, nullable=true)
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $tipo_identificacion;
 
@@ -57,7 +57,7 @@ class Venta
     private $fecha_emision;
 
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\Column(type="string", length=50)
      */
     private $tipo_documento;
 
@@ -87,7 +87,7 @@ class Venta
     private $ambiente;
 
     /**
-     * @ORM\Column(type="string", length=5)
+     * @ORM\Column(type="string", length=50)
      */
     private $tipo_emision;
 
@@ -167,7 +167,7 @@ class Venta
     private $ventaTaxes;
 
     /**
-     * @ORM\OneToMany(targetEntity=VentaDetail::class, mappedBy="venta_id")
+     * @ORM\OneToMany(targetEntity=VentaDetail::class, mappedBy="venta_id", cascade={"persist"})
      */
     private $ventaDetails;
 
@@ -283,7 +283,7 @@ class Venta
         return $this->serie;
     }
 
-    public function setSerie(string $serie): self
+    public function setSerie(?string $serie): self
     {
         $this->serie = $serie;
 
@@ -295,7 +295,7 @@ class Venta
         return $this->secuencia;
     }
 
-    public function setSecuencia(string $secuencia): self
+    public function setSecuencia(?string $secuencia): self
     {
         $this->secuencia = $secuencia;
 
@@ -355,7 +355,7 @@ class Venta
         return $this->fecha_autorización;
     }
 
-    public function setFechaAutorización(?\DateTimeInterface $fecha_autorización): self
+    public function setFechaAutorizacion(?\DateTimeInterface $fecha_autorización): self
     {
         $this->fecha_autorización = $fecha_autorización;
 
@@ -410,24 +410,24 @@ class Venta
         return $this;
     }
 
-    public function getSubtotal(): ?string
+    public function getSubtotal(): ?float
     {
         return $this->subtotal;
     }
 
-    public function setSubtotal(string $subtotal): self
+    public function setSubtotal(?float $subtotal): self
     {
         $this->subtotal = $subtotal;
 
         return $this;
     }
 
-    public function getDescuento(): ?string
+    public function getDescuento(): ?float
     {
         return $this->descuento;
     }
 
-    public function setDescuento(?string $descuento): self
+    public function setDescuento(?float $descuento): self
     {
         $this->descuento = $descuento;
 
@@ -446,12 +446,12 @@ class Venta
         return $this;
     }
 
-    public function getTotal(): ?string
+    public function getTotal(): ?float
     {
         return $this->total;
     }
 
-    public function setTotal(string $total): self
+    public function setTotal(float $total): self
     {
         $this->total = $total;
 

@@ -13,7 +13,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Shop;
 use App\Entity\Customer;
-
+use App\Entity\Product;
+use App\Entity\VentaDetail;
 
 class SaleController extends AbstractController
 {
@@ -32,101 +33,228 @@ class SaleController extends AbstractController
         $data = $doctrine->getRepository(Venta::class);
         $shops = $doctrine->getRepository(Shop::class)->findAll();
         $customers = $doctrine->getRepository(Customer::class)->findAll();
+        $products = $doctrine->getRepository(Product::class)->findAll();
+        $details = null;
+        foreach($products as $product){
+            $pro[] = [
+                'id' => $product->getId(),
+                'name' => $product->getName(),
+                'price' => $product->getPrice()
+            ];
+        }
 
-        if($id)
+        foreach($customers as $client){
+            $clients[] = [
+                'id' => $client->getId(),
+                'name' => $client->getCompany(),
+                'tipoDocumento' => $client->getTipoIdentificacion(),
+                'numeroDocumento' => $client->getNumeroIdentificacion(),
+                'email' => $client->getEmail()
+            ];
+        }
+        if($id){
             $data = $data->find($id);
-        else
+            $details = $data->getVentaDetails();
+        }else
             $data = null;
+
+        $root = ($id)? 'edit': 'form';
         
-        return $this->render('/Sales/form.html.twig', ['data' => $data, 'shops' => $shops, 'customers' => $customers]);
+        return $this->render('/Sales/'.$root.'.html.twig', [
+            'data' => $data, 
+            'shops' => $shops, 
+            'customers' => $customers, 
+            'products' => $products, 
+            'product' => $pro,
+            'clients' => $clients,
+            'details' => $details
+        ]);
     }
 
-    public function create(Request $request, ValidatorInterface $validator)
+    public function create(Request $request, ValidatorInterface $validator, ManagerRegistry $doctrine)
     {
         $session = $request->getSession();        
         $session->start();
         
-        $name = $request->get('name');
-        $code = $request->get('code');
+        $tipo = $request->get('tipo_identificacion');
+        $email = $request->get('email');
+        $numero = $request->get('numero_identificacion');
         $description = $request->get('description');
-        $description1 = $request->get('description1');
-        $description2 = $request->get('description2');
-        $description3 = $request->get('description3');
-        $price = $request->get('price');
+        $ambiente = $request->get('ambiente');
+        $customer = $request->get('customer');
+        $xmlEstado = $request->get('xml_estado');
+        $fechaAutorizacion = $request->get('fecha_autorizacion');
+        $fechaAutorizacion = new \DateTime($fechaAutorizacion);
+        $fechaEmision = $request->get('fecha_emision');
+        $fechaEmision = new \DateTime($fechaEmision);
+        $products = $request->get('products');
+        $items = $request->get('items');
+        $subtotals = $request->get('subtotals');
+        $discount = $request->get('discount');
+        $total = $request->get('total');
+        $shop = $request->get('shop');
+        $subtotal = $request->get('subtotalFinal');
+        $discount = $request->get('discount');
+        $ambiente = $request->get('ambiente');
+        $tipoEmision = $request->get('tipoEmision');
 
-        $product = new Sale();
+        $sale = new Venta();
+        $sale->setTipoIdentificacion($tipo);
+        $sale->setEmail($email);
+        $sale->setNumeroIdentificacion($numero);
+        $sale->setTipoDocumento($tipo);
+        $data = $doctrine->getRepository(Customer::class);
+        $customer = $data->find($customer);
+        $data = $doctrine->getRepository(Shop::class);
+        $shop = $data->find($shop);
+        $sale->setShopId($shop);
+        $sale->setCustomerId($customer);
+        $sale->setXmlEstado($xmlEstado);
+        $sale->setFechaEmision($fechaEmision);
+        $sale->setFechaAutorizacion($fechaAutorizacion);
+        $sale->setTotal($total);
+        $sale->setSubtotal($subtotal);
+        $sale->setDescuento($discount);
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $sale->setClaveAcceso(substr(str_shuffle($permitted_chars), 0, mt_rand(0, 100)));
+        $sale->setAmbiente($ambiente);
+        $sale->setTipoEmision(strval($tipoEmision));
+        $sale->setDescuento($tipoEmision);
+        $sale->setCreatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
+        $sale->setUpdatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
 
-        $product->setName($name);
-        $product->setCode($code);
-        $product->setPrice($price);
-        $product->setDescription($description);
-        $product->setDescriptionAditional1($description1);
-        $product->setDescriptionAditional2($description2);
-        $product->setDescriptionAditional3($description3);
 
-        $errors = $validator->validate($product);
+        $i = 0;
+        foreach($products as $productId){
+            $data = $doctrine->getRepository(Product::class);
+            $productEntity = $data->find($productId);
+            $saleDetail = $doctrine->getRepository(VentaDetail::class);
+            $saleDetail = new VentaDetail();
+            $saleDetail->setProductPrice($productEntity->getPrice());
+            $saleDetail->setProductSubtotal($subtotals[$i]);
+            $saleDetail->setProductQuantity($items[$i]);
+            $saleDetail->setCodigoProducto($productEntity->getCode());
+            $saleDetail->setProductId($productEntity);
+            $i++;
+            //dd('a');
+            $sale->addVentaDetail($saleDetail);
+        }
+
+        $errors = $validator->validate($sale);
         if(!count($errors)){
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($sale);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Saleo creado con éxito');
+            $session->getFlashBag()->add('success', 'Venta creada con éxito');
         }else {
             $session->getFlashBag()->add('error', 'No se pudo crear el Saleo');
         }
         
-        return $this->redirectToRoute('list_product');
+        return $this->redirectToRoute('list_sales');
     }
 
     public function update($id, Request $request, ValidatorInterface $validator, ManagerRegistry $doctrine)
     {
         $session = $request->getSession();        
         $session->start();
-        $data = $doctrine->getRepository(Sale::class);
-        $product = $data->find($id);
-
-        $name = $request->get('name');
-        $code = $request->get('code');
+        $data = $doctrine->getRepository(Venta::class);
+        $sale = $data->find($id);
+        foreach($sale->getVentaDetails() as $details){
+            $sale->removeVentaDetail($details);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($sale);
+        $em->flush();
+        
+        $tipo = $request->get('tipo_identificacion');
+        $email = $request->get('email');
+        $numero = $request->get('numero_identificacion');
         $description = $request->get('description');
-        $description1 = $request->get('description1');
-        $description2 = $request->get('description2');
-        $description3 = $request->get('description3');
-        $price = $request->get('price');
+        $ambiente = $request->get('ambiente');
+        $customer = $request->get('customer');
+        $xmlEstado = $request->get('xml_estado');
+        $fechaAutorizacion = $request->get('fecha_autorizacion');
+        $fechaAutorizacion = new \DateTime($fechaAutorizacion);
+        $fechaEmision = $request->get('fecha_emision');
+        $fechaEmision = new \DateTime($fechaEmision);
+        $products = $request->get('products');
+        $items = $request->get('items');
+        $subtotals = $request->get('subtotals');
+        $discount = $request->get('discount');
+        $total = $request->get('total');
+        $shop = $request->get('shop');
+        $subtotal = $request->get('subtotalFinal');
+        $discount = $request->get('discount');
+        $ambiente = $request->get('ambiente');
+        $tipoEmision = $request->get('tipoEmision');
+
+        $sale->setTipoIdentificacion($tipo);
+        $sale->setEmail($email);
+        $sale->setNumeroIdentificacion($numero);
+        $sale->setTipoDocumento($tipo);
+        $data = $doctrine->getRepository(Customer::class);
+        $customer = $data->find($customer);
+        $data = $doctrine->getRepository(Shop::class);
+        $shop = $data->find($shop);
+        $sale->setShopId($shop);
+        $sale->setCustomerId($customer);
+        $sale->setXmlEstado($xmlEstado);
+        $sale->setFechaEmision($fechaEmision);
+        $sale->setFechaAutorizacion($fechaAutorizacion);
+        $sale->setTotal($total);
+        $sale->setSubtotal($subtotal);
+        $sale->setDescuento($discount);
+        $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+        $sale->setClaveAcceso(substr(str_shuffle($permitted_chars), 0, mt_rand(0, 100)));
+        $sale->setAmbiente($ambiente);
+        $sale->setTipoEmision(strval($tipoEmision));
+        $sale->setDescuento($tipoEmision);
+        $sale->setCreatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
+        $sale->setUpdatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
 
 
-        $product->setName($name);
-        $product->setCode($code);
-        $product->setPrice($price);
-        $product->setDescription($description);
-        $product->setDescriptionAditional1($description1);
-        $product->setDescriptionAditional2($description2);
-        $product->setDescriptionAditional3($description3);
+        $i = 0;
+        foreach($products as $productId){
+            $data = $doctrine->getRepository(Product::class);
+            $productEntity = $data->find($productId);
+            $saleDetail = $doctrine->getRepository(VentaDetail::class);
+            $saleDetail = new VentaDetail();
+            $saleDetail->setProductPrice($productEntity->getPrice());
+            $saleDetail->setProductSubtotal($subtotals[$i]);
+            $saleDetail->setProductQuantity($items[$i]);
+            $saleDetail->setCodigoProducto($productEntity->getCode());
+            $saleDetail->setProductId($productEntity);
+            $i++;
+            
+            $sale->addVentaDetail($saleDetail);
+        }
 
-        $errors = $validator->validate($product);
+        $errors = $validator->validate($sale);
 
         if(!count($errors)){
             $em = $this->getDoctrine()->getManager();
-            $em->persist($product);
+            $em->persist($sale);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Saleo actualizado con éxito');
+            $session->getFlashBag()->add('success', 'Venta actualizada con éxito');
         }else {
             $session->getFlashBag()->add('error', 'No se pudo actualizar el Saleo');
         }
         
-        return $this->redirectToRoute('list_product');
+        return $this->redirectToRoute('list_sales');
     }
 
     public function delete($id, Request $request, ManagerRegistry $doctrine)
     {
         $session = $request->getSession();        
         $session->start();
-        $data = $doctrine->getRepository(Sale::class);
-        $product = $data->find($id);
+        $data = $doctrine->getRepository(Venta::class);
+        $sale = $data->find($id);
         $em = $this->getDoctrine()->getManager();
-        $em->remove($product);
+        $em->remove($sale);
         $em->flush();
-        $session->getFlashBag()->add('success', 'Saleo eliminado con éxito');
+        $session->getFlashBag()->add('success', 'Venta eliminada con éxito');
         
-        return $this->redirectToRoute('list_product');
+        return $this->redirectToRoute('list_sales');
     }
 
     

@@ -8,14 +8,14 @@
 
 		<div class='card'>
 			<div class='card-body'>
-				<form id='sales' method="POST" action='{{ (data is null)? path('create_sale'): path('update_product', {id: data.id}) }}'>
+				<form id='sales' method="POST" action='{{ path('update_sale', {id: data.id}) }}'>
 					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='name'>Tipo Identificación</label>
-								<input id='tipo_identificacion' type='text' class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
+								<input id='tipo_identificacion' type='text' class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getCustomerId().getTipoIdentificacion() }}' readonly/>
 							</div>
 						</div>
 						<div class='col-sm-4'>
@@ -31,6 +31,16 @@
 								<input id='email' type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}' readonly/>
 							</div>
 						</div>
+					</div>
+
+                    <div class='row'>
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='name'>Clave de acceso</label>
+								<input id='tipo_identificacion' type='text' class='form-control'  value='{{ (data is null)? '': data.getClaveAcceso() }}' readonly/>
+							</div>
+						</div>
+						
 					</div>
 
 					<div class='row'>
@@ -49,8 +59,8 @@
 							<div class='form-group'>
 								<label for='email'>Ambiente</label>
 								<select class='form-control' name='ambiente'>
-									<option value='Pruebas'>Pruebas</option>
-									<option value='Produccion'>Producción</option>									
+									<option value='Pruebas' {{data.ambiente is same as('Pruebas')? 'selected': ''}}>Pruebas</option>
+									<option value='Produccion' {{data.ambiente is same as('Produccion')? 'selected': ''}}>Producción</option>									
 								</select>
 							</div>
 						</div>
@@ -74,12 +84,12 @@
 							<div class='form-group'>
 								<label for='name'>Estado de documento</label>
 								<select class='form-control' name='xml_estado'>
-									<option value='Para enviar'>Para enviar</option>
-									<option value='Pendiente'>Pendiente</option>
-									<option value='Recibida'>Recibida</option>
-									<option value='Devuelta'>Devuelta</option>
-									<option value='Anulado'>Anulado</option>
-									<option value='No autorizado'>No autorizado</option>
+									<option value='Para enviar' {{(data is not null and data.getXmlEstado() is same as('Para enviar'))? 'selected': ''}}>Para enviar</option>
+									<option value='Pendiente' {{(data is not null and data.getXmlEstado() is same as('Pendiente'))? 'selected': ''}}>Pendiente</option>
+									<option value='Recibida' {{(data is not null and data.getXmlEstado() is same as('Recibida'))? 'selected': ''}}>Recibida</option>
+									<option value='Devuelta' {{(data is not null and data.getXmlEstado() is same as('Devuelta'))? 'selected': ''}}>Devuelta</option>
+									<option value='Anulado' {{(data is not null and data.getXmlEstado() is same as('Anulado'))? 'selected': ''}}>Anulado</option>
+									<option value='No autorizado' {{(data is not null and data.getXmlEstado() is same as('No autorizado'))? 'selected': ''}}>No autorizado</option>
 								</select>
 							</div>
 						</div>
@@ -107,7 +117,7 @@
 						<div class='col-sm-12'>
 							<div class='form-group'>
 								<label for='email'>Información adicional </label>
-                                <textarea class="form-control" name="description" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
+                                <textarea class="form-control" name="description" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformacionAdicional() }}</textarea>
 							</div>
 						</div>
                         
@@ -115,27 +125,30 @@
 
 
 					<button id="btn" type='button' class='btn btn-success'>Agregar producto</button>
-
-					<div id='container0' class='row'>
-						<div class='col-sm-4'>
-							<select id='0' class='form-control' name='products[]'>
-								{% for row in products %}
-									<option value='{{row.id}}'>{{row.name}}
-										-
-										{{row.price}}</option>
-								{% endfor %}
-							</select>
-						</div>
-						<div class='col-sm-4'>
-							<input id='c0' type='number' class='form-control c0' step='1' min='0' name='items[]' placeholder='Cantidad'/>
-						</div>
-						<div class='col-sm-2'>
-							<input id='s0' type='number' class='form-control' placeholder='Subtotal' name='subtotals[]' readonly/>
-						</div>
-						<div class='col-sm-2'>
-							<button onclick='remove(this)' id='0' type='button' class='btn btn-danger'>Quitar</button>
-						</div>
-					</div>
+                    {% set id = 0 %}
+                    {% for pro in details %}
+                        <div id='container{{id}}' class='row'>
+                            <div class='col-sm-4'>
+                                <select id='{{id}}' class='form-control' name='products[]'>
+                                    {% for row in products %}
+                                        <option value='{{row.id}}' {{(pro.getProductId().id is same as(row.id))? 'selected': ''}}>{{row.name}}
+                                            -
+                                            {{row.price}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class='col-sm-4'>
+                                <input id='c{{id}}' type='number' class='form-control c0' step='1' min='0' name='items[]' value = '{{pro.getProductQuantity()|number_format(0)}}' placeholder='Cantidad'/>
+                            </div>
+                            <div class='col-sm-2'>
+                                <input id='s{{id}}' type='number' class='form-control' placeholder='Subtotal' name='subtotals[]' value = '{{pro.getProductQuantity() * pro.getProductPrice()}}' readonly/>
+                            </div>
+                            <div class='col-sm-2'>
+                                <button onclick='remove(this)' id='{{id}}' type='button' class='btn btn-danger'>Quitar</button>
+                            </div>
+                        </div>
+                        {% set id = id + 1 %}
+                    {% endfor %}
 					<div id='container_div'></div>
 
 					<hr>
@@ -171,7 +184,7 @@
 	<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 	<script>
-		let i = 0;
+		let i = '{{ id }}';
 		let jsonProducts = '{{ product | json_encode }}';
 		let customers ='{{ clients | json_encode }}';
 		jsonProducts = jsonProducts.replace(/&quot;/ig,'"');
@@ -214,7 +227,21 @@
 			});
 
 		});
-		$('.c0').change(function () {
+        for(let j =0; j<i; j++){
+            $('.c'+j ).change(function () {
+				const id = this.id;
+				calculatePrice(id.slice(1));
+				updateTotal()
+			});
+
+			$('#'+j ).change(function () {
+				const id = this.id;
+				calculatePrice(id);
+				updateTotal()
+			});
+		
+        }
+        $('.c0').change(function () {
 			calculatePrice(0);
 			updateTotal()
 		});

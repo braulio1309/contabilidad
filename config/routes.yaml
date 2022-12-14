@@ -173,6 +173,22 @@ show_form_sale:
     defaults:
         id: null
 
+create_sale:
+    path: /admin/venta/crear
+    controller: App\Controller\SaleController::create
+    methods: POST
+
+update_sale:
+    path: /admin/venta/actualizar/{id}
+    controller: App\Controller\SaleController::update
+    methods: [POST]
+
+delete_sale:
+    path: /admin/venta/eliminar/{id}
+    controller: App\Controller\SaleController::delete
+    methods: [GET]
+
+
 
 
     

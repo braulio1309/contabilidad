@@ -26,6 +26,7 @@ class VentaDetail
 
     /**
      * @ORM\ManyToOne(targetEntity=Venta::class, inversedBy="ventaDetails")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $venta_id;
 
@@ -62,7 +63,7 @@ class VentaDetail
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
      */
-    private $product_price;
+    private $product_prie;
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
@@ -180,12 +181,12 @@ class VentaDetail
         return $this;
     }
 
-    public function getProductPrie(): ?string
+    public function getProductPrice(): ?string
     {
         return $this->product_prie;
     }
 
-    public function setProductPrie(string $product_prie): self
+    public function setProductPrice(string $product_prie): self
     {
         $this->product_prie = $product_prie;
 
