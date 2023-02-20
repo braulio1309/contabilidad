@@ -127,7 +127,7 @@ class Venta
     private $descuento;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal",precision=8, scale=2, nullable=true)
      */
     private $id_tax;
 
@@ -439,7 +439,7 @@ class Venta
         return $this->id_tax;
     }
 
-    public function setIdTax(?int $id_tax): self
+    public function setIdTax($id_tax): self
     {
         $this->id_tax = $id_tax;
 

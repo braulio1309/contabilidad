@@ -35,11 +35,13 @@ class SaleController extends AbstractController
         $customers = $doctrine->getRepository(Customer::class)->findAll();
         $products = $doctrine->getRepository(Product::class)->findAll();
         $details = null;
+
         foreach($products as $product){
             $pro[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
-                'price' => $product->getPrice()
+                'price' => $product->getPrice(),
+                'tax' => $product->getTax()->getPorcentaje()
             ];
         }
 
@@ -95,6 +97,8 @@ class SaleController extends AbstractController
         $shop = $request->get('shop');
         $subtotal = $request->get('subtotalFinal');
         $discount = $request->get('discount');
+        $impuesto = $request->get('impuestoFinal');
+        $impuestos = $request->get('impuestos');
         $ambiente = $request->get('ambiente');
         $tipoEmision = $request->get('tipoEmision');
 
@@ -119,7 +123,10 @@ class SaleController extends AbstractController
         $sale->setClaveAcceso(substr(str_shuffle($permitted_chars), 0, mt_rand(0, 100)));
         $sale->setAmbiente($ambiente);
         $sale->setTipoEmision(strval($tipoEmision));
-        $sale->setDescuento($tipoEmision);
+        $sale->setDescuento($discount);
+        $sale->setIdTax((float) $impuesto);
+
+
         $sale->setCreatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
         $sale->setUpdatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
 
@@ -135,8 +142,8 @@ class SaleController extends AbstractController
             $saleDetail->setProductQuantity($items[$i]);
             $saleDetail->setCodigoProducto($productEntity->getCode());
             $saleDetail->setProductId($productEntity);
+            $saleDetail->setTaxId((float) $impuestos[$i]);
             $i++;
-            //dd('a');
             $sale->addVentaDetail($saleDetail);
         }
 
@@ -187,6 +194,8 @@ class SaleController extends AbstractController
         $discount = $request->get('discount');
         $ambiente = $request->get('ambiente');
         $tipoEmision = $request->get('tipoEmision');
+        $impuesto = $request->get('impuestoFinal');
+        $impuestos = $request->get('impuestos');
 
         $sale->setTipoIdentificacion($tipo);
         $sale->setEmail($email);
@@ -208,7 +217,9 @@ class SaleController extends AbstractController
         $sale->setClaveAcceso(substr(str_shuffle($permitted_chars), 0, mt_rand(0, 100)));
         $sale->setAmbiente($ambiente);
         $sale->setTipoEmision(strval($tipoEmision));
-        $sale->setDescuento($tipoEmision);
+        $sale->setDescuento($discount);
+        $sale->setIdTax((float) $impuesto);
+
         $sale->setCreatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
         $sale->setUpdatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
 
@@ -224,6 +235,8 @@ class SaleController extends AbstractController
             $saleDetail->setProductQuantity($items[$i]);
             $saleDetail->setCodigoProducto($productEntity->getCode());
             $saleDetail->setProductId($productEntity);
+            $saleDetail->setTaxId((float) $impuestos[$i]);
+
             $i++;
             
             $sale->addVentaDetail($saleDetail);

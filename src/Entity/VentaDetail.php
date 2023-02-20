@@ -76,7 +76,7 @@ class VentaDetail
     private $product_total;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="decimal",precision=8, scale=2, nullable=true)
      */
     private $tax_id;
 
@@ -222,7 +222,7 @@ class VentaDetail
         return $this->tax_id;
     }
 
-    public function setTaxId(?int $tax_id): self
+    public function setTaxId($tax_id): self
     {
         $this->tax_id = $tax_id;
 

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="customers")
+ * @ORM\Table(name="ps_customer")
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
  */
 class Customer
@@ -17,12 +17,12 @@ class Customer
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true)
+     * @ORM\Column( type="string", length=30, nullable=true)
      * @Assert\NotBlank
      * @Assert\Choice({"RUC", "Pasaporte", "Consumidor final", "Cedula"})
      */
@@ -60,7 +60,7 @@ class Customer
     private $phone;
 
     /**
-     * @ORM\Column(type="string", length=60, nullable=true)
+     * @ORM\Column(name="ciudad",type="string", length=60, nullable=true)
      */
     private $city;
 

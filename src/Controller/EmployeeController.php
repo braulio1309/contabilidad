@@ -16,11 +16,6 @@ use Symfony\Component\Security\Core\Security;
 
 class EmployeeController extends AbstractController
 {
-
-    public function __construct(Security $security)
-    {
-        $this->security = $security;
-    }
     
     public function index(Request $request, ManagerRegistry $doctrine)
     {

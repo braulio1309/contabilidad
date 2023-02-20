@@ -19,10 +19,12 @@ class ShopSeriesController extends AbstractController
     
     public function index(Request $request, ManagerRegistry $doctrine)
     {
+
         $data = $doctrine->getRepository(ShopSerie::class);
 
         $data = $data->findAll();
-        
+
+
         return $this->render('/Shopseries/index.html.twig', ['data' => $data]);
     }
 
@@ -51,6 +53,7 @@ class ShopSeriesController extends AbstractController
         $tipoDocumento = $request->get('tipoDocumento');
         $shop = $doctrine->getRepository(Shop::class)->findById((int) $shop);
         $shopserie = new ShopSerie();
+
 
         $shopserie->setNombreComercial($name);
         $shopserie->setDireccionEstablecimiento($address);

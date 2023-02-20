@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="shopgroups")
+ * @ORM\Table(name="sp_shopgroup")
  * @ORM\Entity(repositoryClass=ShopGroupRepository::class)
  */
 class ShopGroup
@@ -16,7 +16,7 @@ class ShopGroup
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_shopgroup",type="integer")
      */
     private $id;
 

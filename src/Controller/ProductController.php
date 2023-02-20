@@ -7,6 +7,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use App\Entity\Product;
+use App\Entity\Taxes;
+
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -33,10 +35,14 @@ class ProductController extends AbstractController
         else
             $data = null;
         
-        return $this->render('/Products/form.html.twig', ['data' => $data]);
+        $tax = $doctrine->getRepository(Taxes::class);
+
+        $tax = $tax->findAll();
+        
+        return $this->render('/Products/form.html.twig', ['data' => $data, 'taxes' => $tax]);
     }
 
-    public function create(Request $request, ValidatorInterface $validator)
+    public function create(Request $request, ValidatorInterface $validator, ManagerRegistry $doctrine)
     {
         $session = $request->getSession();        
         $session->start();
@@ -48,6 +54,7 @@ class ProductController extends AbstractController
         $description2 = $request->get('description2');
         $description3 = $request->get('description3');
         $price = $request->get('price');
+        $tax = $request->get('tax');
 
         $product = new Product();
 
@@ -58,6 +65,9 @@ class ProductController extends AbstractController
         $product->setDescriptionAditional1($description1);
         $product->setDescriptionAditional2($description2);
         $product->setDescriptionAditional3($description3);
+        $taxes = $doctrine->getRepository(Taxes::class);
+        $taxes = $taxes->find($tax);
+        $product->setTax($taxes);
 
         $errors = $validator->validate($product);
         if(!count($errors)){
@@ -68,6 +78,7 @@ class ProductController extends AbstractController
         }else {
             $session->getFlashBag()->add('error', 'No se pudo crear el Producto');
         }
+
         
         return $this->redirectToRoute('list_product');
     }
@@ -86,6 +97,7 @@ class ProductController extends AbstractController
         $description2 = $request->get('description2');
         $description3 = $request->get('description3');
         $price = $request->get('price');
+        $tax = $request->get('tax');
 
 
         $product->setName($name);
@@ -95,6 +107,9 @@ class ProductController extends AbstractController
         $product->setDescriptionAditional1($description1);
         $product->setDescriptionAditional2($description2);
         $product->setDescriptionAditional3($description3);
+        $taxes = $doctrine->getRepository(Taxes::class);
+        $taxes = $taxes->find($tax);
+        $product->setTax($taxes);
 
         $errors = $validator->validate($product);
 

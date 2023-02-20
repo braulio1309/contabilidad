@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="employees")
+ * @ORM\Table(name="ps_employee")
  * @ORM\Entity(repositoryClass=EmployeeRepository::class)
  */
 class Employee implements
@@ -23,7 +23,7 @@ PasswordHasherAwareInterface
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_employee",type="integer")
      */
     private $id;
 
@@ -48,7 +48,7 @@ PasswordHasherAwareInterface
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="passwd",type="string", length=255)
      * @Assert\NotBlank
      */
     private $password;
@@ -184,7 +184,7 @@ PasswordHasherAwareInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = "ROLE_USER";
 
         return array_unique($roles);
     }

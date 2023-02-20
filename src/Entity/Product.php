@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="products")
+ * @ORM\Table(name="ps_product")
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  */
 class Product
@@ -15,7 +15,7 @@ class Product
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id",type="integer")
      */
     private $id;
 
@@ -26,7 +26,7 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(name="codigo_producto",type="string", length=255)
      * @Assert\NotBlank
      */
     private $code;
@@ -53,10 +53,15 @@ class Product
     private $description_aditional3;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(name="precio",type="float")
      * @Assert\PositiveOrZero
      */
     private $price;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Taxes::class, inversedBy="products")
+     */
+    private $tax;
 
     public function getId(): ?int
     {
@@ -155,6 +160,18 @@ class Product
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getTax(): ?Taxes
+    {
+        return $this->tax;
+    }
+
+    public function setTax(?Taxes $tax): self
+    {
+        $this->tax = $tax;
 
         return $this;
     }

@@ -6,6 +6,7 @@ use App\Repository\ShopSerieRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="sp_shop_series")
  * @ORM\Entity(repositoryClass=ShopSerieRepository::class)
  */
 class ShopSerie
@@ -13,7 +14,7 @@ class ShopSerie
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_shop_series",type="integer")
      */
     private $id;
 

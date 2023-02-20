@@ -12,7 +12,7 @@
 					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
-						<div class='col-sm-4'>
+						<div class='col-sm-3'>
 							<div class='form-group'>
 								<div class='form-group'>
 									<label for='email'>Nombre</label>
@@ -20,17 +20,29 @@
 								</div>
 							</div>
 						</div>
-						<div class='col-sm-4'>
+						<div class='col-sm-3'>
 							<div class='form-group'>
 								<label for='lastname'>Codigo</label>
 								<input type='text' class='form-control' name='code' value='{{ (data is null)? '': data.code }}' required/>
 							</div>
 						</div>
 
-                        <div class='col-sm-4'>
+						<div class='col-sm-3'>
 							<div class='form-group'>
 								<label for='lastname'>Precio</label>
 								<input type='number' class='form-control' name='price' step="0.01" value='{{ (data is null)? '': data.price }}' required/>
+							</div>
+						</div>
+
+						<div class='col-sm-3'>
+							<div class='form-group'>
+								<label for='lastname'>Impuesto</label>
+								<select class='form-control' name='tax'>
+									{% for row in taxes %}
+										<option value='{{row.id}}' {{data and row.id is same as(data.getTax().id)? 'selected': ''}}>{{row.getNombreImpuesto()}}</option>
+									{% endfor %}
+									
+								</select>
 							</div>
 						</div>
 					</div>
@@ -39,7 +51,7 @@
 						<div class='col-sm-12'>
 							<div class='form-group'>
 								<label for='email'>Descripción</label>
-                                <textarea class="form-control" name="description" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.description }}</textarea>
+								<textarea class="form-control" name="description" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.description }}</textarea>
 							</div>
 						</div>
 					</div>
@@ -48,19 +60,19 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Descripción adicional 1</label>
-                                <textarea class="form-control" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
+								<textarea class="form-control" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
 							</div>
 						</div>
-                        <div class='col-sm-4'>
+						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Descripción adicional 2</label>
-                                <textarea class="form-control" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
+								<textarea class="form-control" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
 							</div>
 						</div>
-                        <div class='col-sm-4'>
+						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Descripción adicional 3</label>
-                                <textarea class="form-control" name="description3" form="products" rows="3" placeholder='Descripcion' >{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
+								<textarea class="form-control" name="description3" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
 							</div>
 						</div>
 					</div>

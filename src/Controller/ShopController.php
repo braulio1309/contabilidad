@@ -19,9 +19,11 @@ class ShopController extends AbstractController
     
     public function index(Request $request, ManagerRegistry $doctrine)
     {
+
         $data = $doctrine->getRepository(Shop::class);
 
         $data = $data->findAll();
+
         
         return $this->render('/Shops/index.html.twig', ['data' => $data]);
     }
