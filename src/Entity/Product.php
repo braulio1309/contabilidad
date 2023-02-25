@@ -28,6 +28,9 @@ class Product
     /**
      * @ORM\Column(name="codigo_producto",type="string", length=255)
      * @Assert\NotBlank
+     *  @Assert\Unique(
+     *     message="El valor debe ser unico"
+     * )
      */
     private $code;
 

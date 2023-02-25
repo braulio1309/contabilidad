@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ShopSerieRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="sp_shop_series")
@@ -25,6 +26,9 @@ class ShopSerie
 
     /**
      * @ORM\Column(type="string", length=2)
+     * @Assert\Unique(
+     *     message="El valor debe ser unico"
+     * )
      */
     private $tipo_documento;
 

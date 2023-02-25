@@ -44,6 +44,9 @@ PasswordHasherAwareInterface
      * @Assert\Email(
      *     message = "El email '{{ value }}' no es valido."
      * )
+     * @Assert\Unique(
+     *     message="El valor debe ser unico"
+     * )
      */
     private $email;
 

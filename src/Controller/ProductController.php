@@ -76,7 +76,7 @@ class ProductController extends AbstractController
             $em->flush();
             $session->getFlashBag()->add('success', 'Producto creado con éxito');
         }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el Producto');
+            $session->getFlashBag()->add('danger', 'No se pudo crear el Producto');
         }
 
         
@@ -119,7 +119,7 @@ class ProductController extends AbstractController
             $em->flush();
             $session->getFlashBag()->add('success', 'Producto actualizado con éxito');
         }else {
-            $session->getFlashBag()->add('error', 'No se pudo actualizar el Producto');
+            $session->getFlashBag()->add('danger', 'No se pudo actualizar el Producto');
         }
         
         return $this->redirectToRoute('list_product');

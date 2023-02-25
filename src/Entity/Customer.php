@@ -25,12 +25,18 @@ class Customer
      * @ORM\Column( type="string", length=30, nullable=true)
      * @Assert\NotBlank
      * @Assert\Choice({"RUC", "Pasaporte", "Consumidor final", "Cedula"})
+     *  @Assert\Unique(
+     *     message="El valor debe ser unico"
+     * )
      */
     private $tipo_identificacion;
 
     /**
      * @ORM\Column(type="string", length=15)
      * @Assert\NotBlank
+     *  @Assert\Unique(
+     *     message="El valor debe ser unico"
+     * )
      * 
      */
     private $numero_identificacion;
