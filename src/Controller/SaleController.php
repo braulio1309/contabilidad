@@ -70,8 +70,8 @@ class SaleController extends AbstractController
         }
         if($id){
             $data = $data->find($id);
-            dd(json_decode($data->getFormaPago()));
             $details = $data->getVentaDetails();
+            $formas = json_decode($data->getFormaPago());
             foreach($details as $detail){
                 $details_js[] =[
                     'id'   => $detail->getProductId()->getId(),
@@ -94,6 +94,7 @@ class SaleController extends AbstractController
             'series'    => $seri, 
             'products'  => $products ?? [], 
             'product'   => $pro ?? [],
+            'formas'    => $formas ?? [],
             'clients'   => $clients,
             'details'   => $details,
             'details_js'=> $details_js

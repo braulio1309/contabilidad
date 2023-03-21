@@ -150,25 +150,7 @@
 						</div>
                         
 					</div>
-
-					<div class='row'>
-						<div class='col-sm-12'>
-							<div class='form-group'>
-								<label for='email'>Información adicional </label>
-                                <textarea class="form-control" name="description" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformacionAdicional() }}</textarea>
-							</div>
-						</div>
-                        
-					</div>
-
-
-					{# <button id="btn" type='button' class='btn btn-success'>Agregar producto</button> #}
-					{# <div class="p-0 ml-0 mt-2 col-5" style="max-height:120px; overflow:auto;">
-						<input type="text" class="form-control" id="mySearch" onkeyup="myFunction()" placeholder="Buscar producto.." title="Type in a category">
-						<ul class="list-group list-unstyled" id="myMenu" style="display:none;">
-							
-						</ul>
-					</div> #}
+				
 					<div class="p-0 ml-0 mt-2 col-5">
 						<div class="form-group">
 							<input type="text" class="form-control" onkeyup="myFunction()" id="mySearch" placeholder="Buscar producto...">
@@ -240,29 +222,30 @@
 									</tr>
 								</thead>
 								<tbody>
+									{% for form in formas %}
 									<tr>
 										<td class="col-4">
 											<select class="form-control" name="forma_pago[]" required>
 												<option value="">Seleccionar</option>
-												<option value="efectivo">Efectivo</option>
-												<option value="tarjeta">Tarjeta</option>
-												<option value="transferencia">Transferencia</option>
+												<option value="efectivo" {{(form.forma_pago is same as("efectivo"))? 'selected': ''}}>Efectivo</option>
+												<option value="tarjeta" {{(form.forma_pago is same as("tarjeta"))? 'selected': ''}}>Tarjeta</option>
+												<option value="transferencia" {{(form.forma_pago is same as("transferencia"))? 'selected': ''}}>Transferencia</option>
 											</select>
 										</td>
 										<td class="col-2">
-											<input class="form-control" type="number" name="valor[]" required>
+											<input class="form-control" type="number" name="valor[]" value="{{ form.valor}}" required>
 										</td>
 										<td class="col-2">
 											<select class="form-control" name="tiempo[]" required>
 												<option value="">Seleccionar</option>
-												<option value="diario">Diario</option>
-												<option value="semanal">Semanal</option>
-												<option value="mensual">Mensual</option>
-												<option value="anual">Anual</option>
+												<option value="diario" {{(form.tiempo is same as("diario"))? 'selected': ''}}>Diario</option>
+												<option value="semanal" {{(form.tiempo is same as("semanal"))? 'selected': ''}}>Semanal</option>
+												<option value="mensual" {{(form.tiempo is same as("mensual"))? 'selected': ''}}>Mensual</option>
+												<option value="anual" {{(form.tiempo is same as("anual"))? 'selected': ''}}>Anual</option>
 											</select>
 										</td>
 										<td class="col-2">
-											<input class="form-control" type="number" name="plazo[]" required>
+											<input class="form-control" type="number" value="{{form.plazo}}" name="plazo[]" required>
 										</td>
 										<td class="col-2 text-center">
 											<button class="btn btn-danger eliminar-fila" type="button">
@@ -270,17 +253,19 @@
 											</button>
 										</td>
 									</tr>
+									{% endfor %}
 								</tbody>
 							</table>
 						</div>
 						<div class="row mt-3">
 							<div class="col-4">
 								<label for='email'>Información adicional </label>
-								<input type="text" class="form-control" name="titulo_informacion_adicional" placeholder="Ingrese ...">
+								<input type="text" class="form-control" name="titulo_informacion_adicional" placeholder="Ingrese ..." value="{{ (data is null)? '': data.getTituloInformacionAdicional() }}">
 							</div>
 							<div class="col-8">
 								<div class='form-group'>
-									<textarea class="form-control" name="description_informacion_adicional" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
+
+									<textarea class="form-control" name="description_informacion_adicional" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionInformacionAdicional() }}</textarea>
 								</div>
 							</div>
 						</div>
