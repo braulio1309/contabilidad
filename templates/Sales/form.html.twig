@@ -1,210 +1,557 @@
 {% extends 'Layouts/header.html.twig' %}
 
 {% block body %}
-	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">Ventas</h1>
-		<p class="mb-4">Informacion de ventas</p>
+	<div class='card'>
+		<div class='card-body'>
+			<form id='sales' method="POST" action='{{ (data is null)? path('create_sale'): path('update_product', {id: data.id}) }}'>
+				<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
-
-		<div class='card'>
-			<div class='card-body'>
-				<form id='sales' method="POST" action='{{ (data is null)? path('create_sale'): path('update_product', {id: data.id}) }}'>
-					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
-
-					<div class='row'>
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='name'>Tipo Identificación</label>
-								<input id='tipo_identificacion' type='text' class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
-							</div>
+				<div class='row'>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='name'>Tipo Identificación</label>
+							<input id='tipo_identificacion' type='text' class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
 						</div>
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='lastname'>Número Identificación</label>
-								<input id='numero_identificacion' type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
-							</div>
-						</div>
-
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='lastname'>Email</label>
-								<input id='email' type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}' readonly/>
-							</div>
+					</div>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='lastname'>Número Identificación</label>
+							<input id='numero_identificacion' type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
 						</div>
 					</div>
 
-					<div class='row'>
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='email'>Tienda</label>
-								<select class='form-control' name='shop'>
-									{% for row in shops %}
-										<option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
-									{% endfor %}
-								</select>
-							</div>
-						</div>
-
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='email'>Ambiente</label>
-								<select class='form-control' name='ambiente'>
-									<option value='Pruebas'>Pruebas</option>
-									<option value='Produccion'>Producción</option>									
-								</select>
-							</div>
-						</div>
-
-
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='email'>Cliente</label>
-								<select id='client' class='form-control' name='customer'>
-									<option value='NA'>Seleccione cliente</option>
-									{% for row in customers %}
-										<option value='{{row.id}}' {{(data is not null and data.getCustomerId().id is same as(row.id))? 'selected': ''}}>{{row.company}}</option>
-									{% endfor %}
-								</select>
-							</div>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='lastname'>Email</label>
+							<input id='email' type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}' readonly/>
 						</div>
 					</div>
+				</div>
 
-					<div class='row'>
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='name'>Estado de documento</label>
-								<select class='form-control' name='xml_estado'>
-									<option value='Para enviar'>Para enviar</option>
-									<option value='Pendiente'>Pendiente</option>
-									<option value='Recibida'>Recibida</option>
-									<option value='Devuelta'>Devuelta</option>
-									<option value='Anulado'>Anulado</option>
-									<option value='No autorizado'>No autorizado</option>
-								</select>
-							</div>
-						</div>
-
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='name'>Fecha autorizacion</label>
-								<input type='date' class='form-control' name='fecha_autorizacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
-
-							</div>
-						</div>
-
-						<div class='col-sm-4'>
-							<div class='form-group'>
-								<label for='name'>Tipo emisión</label>
-								<select class='form-control' name='tipo_emision'>
-									<option value='Normal'>Normal</option>
-								</select>
-							</div>
-						</div>
-                        
-					</div>
-
-					<div class='row'>
-						<div class='col-sm-12'>
-							<div class='form-group'>
-								<label for='email'>Información adicional </label>
-                                <textarea class="form-control" name="description" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
-							</div>
-						</div>
-                        
-					</div>
-
-
-					<button id="btn" type='button' class='btn btn-success'>Agregar producto</button>
-
-					<div id='container0' class='row'>
-						<div class='col-sm-4'>
-							<select id='0' class='form-control' name='products[]'>
-								{% for row in products %}
-									<option value='{{row.id}}'>{{row.name}}
-										-
-										{{row.price}}</option>
+				<div class='row'>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='email'>Tienda</label>
+							<select class='form-control' name='shop' id="shop" onchange="getSeries()">
+								{% for row in shops %}
+									<option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
 								{% endfor %}
 							</select>
 						</div>
-						<div class='col-sm-3'>
-							<input id='c0' type='number' class='form-control c0' step='1' min='0' name='items[]' placeholder='Cantidad'/>
-						</div>
-
-						<div class='col-sm-2'>
-							<input id='i0' type='number' class='form-control i0' step='1' min='0' name='impuestos[]' placeholder='Impuesto' readonly/>
-						</div>
-
-						<div class='col-sm-2'>
-							<input id='s0' type='number' class='form-control' placeholder='Subtotal' name='subtotals[]' readonly/>
-						</div>
-						<div class='col-sm-1'>
-							<button onclick='remove(this)' id='0' type='button' class='btn btn-danger'>Quitar</button>
-						</div>
-					</div>
-					<div id='container_div'></div>
-
-					<hr>
-					<div class="d-flex flex-row-reverse">
-						<div class="p-2">
-							<label>Descuento %</label>
-							<input type='number' id='discount' name='discount' class='form-control' value='0'>
-						</div>
-					</div>
-					<div class="d-flex flex-row-reverse">
-						<div class="p-2">
-							<label>Subtotal</label>
-							<input type='number' id='subtotal' class='form-control' value='0' name='subtotalFinal' readonly>
-						</div>
-
-
 					</div>
 
-					<div class="d-flex flex-row-reverse">
-						<div class="p-2">
-							<label>Impuesto</label>
-							<input type='number' id='impuestoFinal' class='form-control' value='0' name='impuestoFinal' readonly>
-						</div>
-
-
-					</div>
-					<div class="d-flex flex-row-reverse">
-						<div class="p-2">
-							<label>Total</label>
-							<input type='number' id='total' class='form-control' value='0' name='total' readonly>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='email'>Ambiente</label>
+							<select class='form-control' name='ambiente'>
+								<option value='1'>Pruebas</option>
+								<option value='2'>Producción</option>									
+							</select>
 						</div>
 					</div>
 
+					<div class='col-sm-3'>
+						<div class='form-group mb-0 pb-0'>
+							<label for='email'>Cliente</label>
+							
+							<input type="text" class="form-control" onkeyup="searchCustomer()" id="cliente" placeholder="Buscar cliente...">
+							<input type="hidden" class="form-control" name="customer" id="client">
+						</div>
+						<ul class="list-group list-unstyled w-100 overflow-auto" id="myMenuCustomer" style="max-height:120px;position: absolute; z-index: 9999;">
+						</ul>
+					</div>
+					<div class="col-sm-1 mt-4 pt-3">
+						<button data-toggle="modal" data-target="#create_client" type='button' class='btn btn-sm btn-primary'>
+							<i class='fa fa-plus' aria-hidden='true'></i>
+						</button>
+					</div>
+				</div>
+				<div class='row'>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='email'>Tipo</label>
+							<select class='form-control' name='codigoDocumento' id="codigoDocumento" onchange="getSeries()">
+								<option value='01'>Factura</option>
+								<option value='03'>Liquidación</option>
+								<option value='04'>Nota de crédito</option>
+								<option value='05'>Nota de debito</option>
+								<option value='06'>Guía remisión</option>
+								<option value='07'>Comprobante de retención</option>
+							</select>
+						</div>
+					</div>
 
-					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='email'>Serie</label>
+							<select class='form-control' name='serie' id="serie">
+							</select>
+						</div>
+					</div>
+
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='email'>Número</label>
+							<input type="text" class="form-control" readonly name="numeroSerie" id="numeroSerie" placeholder="Numero...">
+						</div>
+					</div>
+				</div>
+
+				<div class='row'>
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='name'>Estado de documento</label>
+							<select class='form-control' name='xml_estado' disabled="true">
+								<option value='0'>Para enviar</option>
+								<option value='1'>Pendiente</option>
+								<option value='2'>Recibida</option>
+								<option value='3'>Devuelta</option>
+								<option value='4'>Anulado</option>
+								<option value='5'>No autorizado</option>
+							</select>
+						</div>
+					</div>
+
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='name'>Fecha autorizacion</label>
+							<input type='date' readonly class='form-control' name='fecha_autorizacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+
+						</div>
+					</div>
+
+					<div class='col-sm-4'>
+						<div class='form-group'>
+							<label for='name'>Tipo emisión</label>
+							<select class='form-control' name='tipo_emision'>
+								<option value='Normal'>Normal</option>
+							</select>
+						</div>
+					</div>  
+				</div>
+
+				<div class="p-0 ml-0 mt-2 col-5">
+					<div class="form-group">
+						<input type="text" class="form-control" onkeyup="myFunction()" id="mySearch" placeholder="Buscar producto...">
+					</div>
+					<ul class="list-group list-unstyled w-100 overflow-auto" id="myMenu" style="max-height:120px;position: absolute;top: 100%; left: 0;  z-index: 9999;">
+					</ul>
+				</div>
+				
+				<div id='container_div'></div>
+
+				<hr>
+				<div class="row mt-4">
+					<div class="col-10">
+						<div class="row">
+							<div class="mb-2" style="display:contents">
+								<h5 class="font-weight-bold mr-auto">Formas de pago</h5>
+								<button class="btn btn-primary ml-auto" id="agregar-fila" type="button">
+									<i class="fas fa-plus"></i>
+								</button>
+							</div>
+							<table class="table table-bordered m-2" id="tabla-dinamica">
+								<thead>
+									<tr>
+										<th>Forma de pago</th>
+										<th>Valor</th>
+										<th>Tiempo</th>
+										<th>Plazo</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="col-4">
+											<select class="form-control" name="forma_pago[]" required>
+												<option value="">Seleccionar</option>
+												<option value="efectivo">Efectivo</option>
+												<option value="tarjeta">Tarjeta</option>
+												<option value="transferencia">Transferencia</option>
+											</select>
+										</td>
+										<td class="col-2">
+											<input class="form-control" type="number" name="valor[]" required>
+										</td>
+										<td class="col-2">
+											<select class="form-control" name="tiempo[]" required>
+												<option value="">Seleccionar</option>
+												<option value="diario">Diario</option>
+												<option value="semanal">Semanal</option>
+												<option value="mensual">Mensual</option>
+												<option value="anual">Anual</option>
+											</select>
+										</td>
+										<td class="col-2">
+											<input class="form-control" type="number" name="plazo[]" required>
+										</td>
+										<td class="col-2 text-center">
+											<button class="btn btn-danger eliminar-fila" type="button">
+												<i class="fas fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="row mt-3">
+							<div class="col-4">
+								<label for='email'>Información adicional </label>
+								<input type="text" class="form-control" name="titulo_informacion_adicional" placeholder="Ingrese ...">
+							</div>
+							<div class="col-8">
+								<div class='form-group'>
+									<textarea class="form-control" name="description_informacion_adicional" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="d-flex flex-row-reverse">
+							<div class="p-2">
+								<label>Descuento %</label>
+								<input type='number' id='discount' name='discount' class='form-control' value='0'>
+							</div>
+						</div>
+						<div class="d-flex flex-row-reverse">
+							<div class="p-2">
+								<label>Subtotal</label>
+								<input type='number' id='subtotal' class='form-control' value='0' name='subtotalFinal' readonly>
+							</div>
+						</div>
+
+						<div class="d-flex flex-row-reverse">
+							<div class="p-2">
+								<label>Impuesto</label>
+								<input type='number' id='impuestoFinal' class='form-control' value='0' name='impuestoFinal' readonly>
+							</div>
+						</div>
+
+						<div class="d-flex flex-row-reverse">
+							<div class="p-2">
+								<label>Total</label>
+								<input type='number' id='total' class='form-control' value='0' name='total' readonly>
+							</div>
+						</div>
+					</div>
+				</div>
 
 
-				</form>
+				<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+				<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form>
+									<div class="row">
+										<div class="col-12">
+											<div class="form-group">
+												<label for="message-text" class="col-form-label">Descripción:</label>
+												<textarea class="form-control" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" id="message-text-1"></textarea>
+												<span class="font-weight-bold text-sm" id="desc_pr1">Caracteres: 0</span>
+											</div>
+										</div>
+										<div class="col-4">
+											<div class="form-group">
+												<label for="message-text" class="col-form-label">Detalle adicional para el item 1:</label>
+												<textarea class="form-control" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" id="message-text-2"></textarea>
+												<span class="font-weight-bold text-sm" id="desc_pr2">Caracteres: 0</span>
+											</div>
+										</div>
+										<div class="col-4">
+											<div class="form-group">
+												<label for="message-text" class="col-form-label">Detalle adicional para el item 2:</label>
+												<textarea class="form-control" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" id="message-text-3"></textarea>
+												<span class="font-weight-bold text-sm" id="desc_pr3">Caracteres: 0</span>
+											</div>
+										</div>
+										<div class="col-4">
+											<div class="form-group">
+												<label for="message-text" class="col-form-label">Detalle adicional para el item 3:</label>
+												<textarea class="form-control" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" id="message-text-4"></textarea>
+												<span class="font-weight-bold text-sm" id="desc_pr4">Caracteres: 0</span>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+							<div class="modal-footer">
+								<button type="button" onclick="closeModal()" class="btn btn-primary">Guardar</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="modal fade" id="create_client" tabindex="-1" aria-labelledby="create_clientLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="font-weight-bold">Crear cliente</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="form" method="POST" action='{{ path('create_customer',{type: 'pos'}) }}'>
+						<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
+
+						<div class='row'>
+							<div class='col-sm-6'>
+								<div class='form-group'>
+									<label for='name'>Tipo Identificación</label>
+									<select class='form-control' name='tipo_identificacion'>
+										<option value='04'>RUC</option>
+										<option value='05'>Cedula</option>
+										<option value='06'>Pasaporte</option>
+										<option value='07'>Consumidor final</option>
+									</select>
+								</div>
+							</div>
+							<div class='col-sm-6'>
+								<div class='form-group'>
+									<label for='lastname'>Número Identificación</label>
+									<input type='text' maxlength="15" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').replace(/(\..*)\./g, '$1');"  class='form-control' name='numero_identificacion' required/>
+								</div>
+							</div>
+						</div>
+
+						<div class='row'>
+							<div class='col-sm-6'>
+								<div class='form-group'>
+									<label for='email'>Cliente</label>
+									<input type='text' maxlength="300" class='form-control' name='customer' required/>
+								</div>
+							</div>
+							<div class='col-sm-6'>
+								<div class='form-group div-emails'>
+									<label for='email'>Email</label>
+									<input type='text' class='form-control' id="emails" name='email'/>
+								</div>
+							</div>
+						</div>
+
+						<div class='row'>
+							<div class='col-sm-6'>
+								<div class='form-group'>
+									<label for='email'>Telefono</label>
+									<input type='text' class='form-control' oninput="this.value = this.value.replace(/[^+0-9 -]/g, '').replace(/(\..*)\./g, '$1');" name='phone'/>
+								</div>
+							</div>
+							<div class='col-sm-6'>
+								<div class='form-group'>
+									<label for='email'>Ciudad</label>
+									<input type='text' class='form-control' name='city'/>
+								</div>
+							</div>
+						</div>
+
+						<div class='row'>
+							<div class='col-sm-12'>
+								<div class='form-group'>
+									<label for='address'>Direccion</label>
+									<input type='text' class='form-control' maxlength="300" name='address'/>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class='btn btn-primary btn-submit-press float-right' value='Crear'/>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-	<script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 	<script>
-		let i = 0;
-		let jsonProducts = '{{ product | json_encode }}';
-		let customers ='{{ clients | json_encode }}';
-		jsonProducts = jsonProducts.replace(/&quot;/ig,'"');
-		customers = customers.replace(/&quot;/ig,'"');
-		const products = JSON.parse(jsonProducts);
-		customers = JSON.parse(customers);
-		$('#btn').on('click', function () {
-			i++;
+		let textFields = document.querySelectorAll("#exampleModal .modal-body textarea");
+		textFields.forEach(function(field) {
+			field.addEventListener("keyup", function(e) {
+				let id = field.id.split("-")[2];
+				let count = e.target.value.length;
+				$("#desc_pr" + id).text("Caracteres: " + count);
+			});
+		});
+
+		let i = -1;
+		var id = null;
+		
+		var products_views = [];
+		var products_add = [];
+
+		var customers = parseJSON('{{ clients | json_encode }}');
+		var series = parseJSON('{{ series | json_encode }}');
+		var products = parseJSON('{{ product | json_encode }}');
+
+		function parseJSON(input) {
+			let output = input.replace(/&quot;/ig,'"');
+			return JSON.parse(output);
+		}
+
+		getSeries();
+		$('#serie').on('change', function () {
+			id = $(this).val();
+			const found = series.find(element => element.id == id);
+			document.getElementById("numeroSerie").value = found.secuencia;
+		});
+
+		$('#agregar-fila').on('click', function () {
+			let tabla = document.querySelector("#tabla-dinamica");
+			let cuerpo = tabla.querySelector("tbody");
+
+			// Creamos una nueva fila
+			let fila = document.createElement("tr");
+
+			// Agregamos las celdas
+			fila.innerHTML = `
+								<td class="col-4">
+									<select class="form-control" name="forma_pago[]" required>
+										<option value="">Seleccionar</option>
+										<option value="efectivo">Efectivo</option>
+										<option value="tarjeta">Tarjeta</option>
+										<option value="transferencia">Transferencia</option>
+									</select>
+								</td>
+								<td class="col-2">
+									<input class="form-control" type="number" name="valor[]" required>
+								</td>
+								<td class="col-2">
+									<select class="form-control" name="tiempo[]" required>
+										<option value="">Seleccionar</option>
+										<option value="diario">Diario</option>
+										<option value="semanal">Semanal</option>
+										<option value="mensual">Mensual</option>
+										<option value="anual">Anual</option>
+									</select>
+								</td>
+								<td class="col-2">
+									<input class="form-control" type="number" name="plazo[]" required>
+								</td>
+								<td class="col-2 text-center">
+									<button class="btn btn-danger eliminar-fila" type="button">
+										<i class="fas fa-trash"></i>
+									</button>
+								</td>
+						`;
+				// Agregamos la fila al cuerpo
+				cuerpo.appendChild(fila);
+
+				
+		});
+
+		$('table tbody').on('click', '.eliminar-fila', function() {
+			// Verificar si hay más de una fila
+			if ($('#tabla-dinamica tbody tr').length > 1) {
+				// Si hay más de una fila, eliminar la fila actual
+				$(this).closest('tr').remove();
+			}
+		});
+
+		$('#discount').change(function () {
+			updateTotal();
+		});
+
+		function remove(id,cont) {
+			$('#container' + cont).remove();
+			console.log(this.products_add);
+			for(let k = 0; k< this.products_add.length; k++){
+				if(this.products_add[k].id == id){
+					this.products_add.splice(k, 1);
+					break;
+				}
+			}
+			document.getElementById("container_div").innerHTML= "";
+			productos_agg = this.products_add;
+			this.products_add = [];
+			for(let k = 0; k< this.productos_agg.length; k++){
+				addProduct(this.productos_agg[k].id,this.productos_agg[k].quantity)
+				calculatePrice(k)
+			}
+
+			updateTotal()
+		}
+
+		function myFunction() {
+			var input, ul, li;
+			input = document.getElementById("mySearch").value;
+			ul = document.getElementById("myMenu");
+			ul.style.display= "block";
+			ul.innerHTML= "";
+			if(input.length<4){
+				ul.innerHTML= "";
+				return;
+			}
+				this.products_views = this.products.filter(product => {
+					return (
+						product.code.toLowerCase().includes(input.toLowerCase()) ||
+						product.name.toLowerCase().includes(input.toLowerCase()) 
+
+					)
+				})
+				for(let k = 0; k< this.products_views.length; k++){
+					ul.insertAdjacentHTML('beforeend',`<li><a class="list-group-item list-group-item-action px-3 py-1" style="color:#4e73df" onclick="addProduct(${this.products_views[k].id})" href="javascript:void(0)">${this.products_views[k].name}</a></li>`)
+				}
+			
+			
+		}
+
+		function getSeries(shop=1, type='03'){
+			shop = document.getElementById("shop").value;
+			type = document.getElementById("codigoDocumento").value;
+			series_view = this.series.filter(serie => {
+					return (
+						serie.shop_id == shop &&
+						serie.codigo_documento == type 
+					)
+				})
+			var select = document.getElementById("serie");
+			select.options.length = 0;
+			select.options[select.options.length] = new Option("Seleccione una serie","-1")
+			for(let k = 0; k < series_view.length; k++){
+				select.options[select.options.length] = new Option(series_view[k].serie, series_view[k].id);
+			}
+			document.getElementById("numeroSerie").value = ""
+		}
+
+		function addProduct(id, qty=1){
+			document.getElementById("myMenu").innerHTML='';
+			document.getElementById("mySearch").value='';
+			if(this.products_add.find(element => element.id == id)){
+				for(let k = 0; k< this.products_add.length; k++){
+					if(this.products_add[k].id==id){
+						this.products_add[k].quantity = this.products_add[k].quantity +1; 
+						document.getElementById('c'+k).value =this.products_add[k].quantity;
+						calculatePrice(k)
+						updateTotal();
+						return;
+					}
+				}
+			}
+			const found = this.products.find(element => element.id == id);
+			i=this.products_add.length;
+			this.products_add.push(found);
 			$('#container_div').append(`
-				<div id='container${i}' class='row'>
-					<div class='col-sm-4'>
-						<select id='${i}' class='form-control' name='products[]'>
-							{% for row in products %}
-								<option value='{{row.id}}'>{{row.name}} - {{row.price}}</option>
-							{% endfor %}
+				<div id='container${i}' class='row mt-2'>
+					<input type='hidden' id='descripcion${i}' value="${found.name}" name='descripcion[]' />
+					<input type='hidden' id='descripcion_adicional1${i}' name='descripcion_adicional1[]'/>
+					<input type='hidden' id='descripcion_adicional2${i}' name='descripcion_adicional2[]'/>
+					<input type='hidden' id='descripcion_adicional3${i}' name='descripcion_adicional3[]'/>
+					<div class='col-sm-3'>
+						<select style='pointer-events: none;' id='${i}' class='form-control' name='products[]'>
+							<option selected value='${found.id}'>${found.name} - ${found.price}</option>
 						</select>
 					</div>
-					<div class='col-sm-3'>
-						<input id='c${i}' type='number' class='form-control c${i}' step='1' min='0' name='items[]' placeholder='Cantidad'/>
+					<div class='col-sm-2'>
+						<input id='c${i}' type='number' value='${qty}' class='form-control c${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='items[]' placeholder='Cantidad'/>
+					</div>
+					<div class='col-sm-2'>
+						<input id='d${i}' type='number' value='0' class='form-control d${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='discounts[]' placeholder='Descuento'/>
 					</div>
 					<div class='col-sm-2'>
 						<input id='i${i}' type='number' class='form-control i${i}' step='1' min='0' name='impuestos[]' placeholder='Impuesto' readonly/>
@@ -212,40 +559,18 @@
 					<div class='col-sm-2'>
 						<input id ='s${i}' type='number' class='form-control'  placeholder='Subtotal'  name='subtotals[]' readonly/>
 					</div>
-					<div class='col-sm-1'>
-						<button onclick='remove(this)' id='${i} 'type='button' class='btn btn-danger'>Quitar</button>
+					<div class='col-sm-1 text-center my-auto'>
+						<button  id='${i}' onclick="openModal(${i})" type='button' class='btn btn-sm btn-primary'>
+								<i class='fa fa-ellipsis-h' aria-hidden='true'></i>
+						</button>
+						<button onclick='remove(${found.id},${i})' id='${i} 'type='button' class='btn btn-sm btn-danger'>
+							<i class='fa fa-trash' aria-hidden='true'></i>
+						</button>
 					</div>
 				</div>
 			`);
-
-			$('.c'+i ).change(function () {
-				const id = this.id;
-				calculatePrice(id.slice(1));
-				updateTotal();
-			});
-
-			$('#'+i ).change(function () {
-				const id = this.id;
-				calculatePrice(id);
-				updateTotal();
-			});
-
-		});
-		$('.c0').change(function () {
-			calculatePrice(0);
-			updateTotal()
-		});
-		$('.i0').change(function () {
-			calculatePrice(0);
-			updateTotal()
-		});
-
-		$('#discount').change(function () {
+			calculatePrice(i)
 			updateTotal();
-		});
-
-		function remove(object) {
-			$('#container' + object.id).remove();
 		}
 
 		$('#client').change(function () {
@@ -258,21 +583,60 @@
 			numero.value = client.numeroDocumento;
 			tipo.value = client.tipoDocumento;
 		});
+		
+		selectCustomer = function (id) {
+			const client = customers.find(client => client.id == id);
+			let email = document.getElementById('email');
+			let numero = document.getElementById('numero_identificacion');
+			let tipo = document.getElementById('tipo_identificacion');
+			email.value = client.email;
+			numero.value = client.numeroDocumento;
+			tipo.value = client.tipoDocumento;
+			document.getElementById("myMenuCustomer").innerHTML='';
+			document.getElementById("cliente").value= client.name;
+			document.getElementById("client").value= client.id;
+
+		};
+		
+		searchCustomer =  () => {
+			const value = document.getElementById("cliente").value;
+			ul = document.getElementById("myMenuCustomer");
+			ul.style.display= "block";
+			ul.innerHTML= "";
+			if(value.length<4){
+				ul.innerHTML= "";
+				return;
+			}
+			var clients = this.customers.filter(customer => {
+					return (
+						customer.numeroDocumento.toLowerCase().includes(value.toLowerCase()) ||
+						customer.name.toLowerCase().includes(value.toLowerCase()) 
+
+					)
+				})
+			for(let k = 0; k< clients.length; k++){
+					ul.insertAdjacentHTML('beforeend',`<li><a class="list-group-item list-group-item-action px-3 py-1" style="color:#4e73df" onclick="selectCustomer(${clients[k].id})" href="javascript:void(0)">${clients[k].name}</a></li>`)
+			}
+			
+		};
 
 		function calculatePrice(id){
 			const productId = document.getElementById(id).value;
 			const amount = document.getElementById('c'+id).value;
+			const discount = document.getElementById('d'+id).value;
 			const product = products.find(pro => pro.id == productId );
 			let subtotal = document.getElementById('s'+id);
 			let impuesto = document.getElementById('i'+id);
 			subtotal.value = (parseInt(amount) * parseFloat(product.price)).toFixed(2);
-			console.log(product)
 			let porcentaje =  parseFloat(product.tax) /100; 
 			porcentaje = product.price * porcentaje;
 			impuesto.value = (parseInt(amount) * porcentaje).toFixed(2);
 
 			let subtotalFinal = 0;
 			let ImpuestoFinal = 0;
+			if(discount > 0){
+				subtotal.value = (subtotal.value - (subtotal.value * (discount / 100)))
+			}
 
 			for(let j=0; j<=i; j++){
 				let subtotal = document.getElementById('s'+j);
@@ -281,9 +645,10 @@
 				if(subtotal){
 					let idProduct = document.getElementById(j).value;
 					let cant = document.getElementById('c'+j).value;
+					let disc = document.getElementById('d'+j).value;
 					let pro = products.find(pro => pro.id == idProduct); 
 					if(cant)
-						subtotalFinal += parseFloat((parseInt(cant) * parseFloat(pro.price)).toFixed(2));
+						subtotalFinal += parseFloat((parseInt(cant) * parseFloat(pro.price)).toFixed(2) - (parseInt(cant) * parseFloat(pro.price) * disc/100));
 				}
 
 				if(impuesto){
@@ -292,8 +657,6 @@
 					let pro = products.find(pro => pro.id == idProduct); 
 					let impu = parseFloat(pro.tax)/100;
 					let impuestoFloat = impu * pro.price;
-					console.log(impuestoFloat)
-										console.log(cant)
 
 					if(cant)
 						ImpuestoFinal += parseFloat((parseInt(cant) * impuestoFloat).toFixed(2));
@@ -312,9 +675,7 @@
 			const subtotal = calculatePrice(0);
 			let impuestoReport = document.getElementById('impuestoFinal');
 			let discount = document.getElementById('discount').value;
-			let total = document.getElementById('total');
-			console.log(impuestoReport.value);
-			
+			let total = document.getElementById('total');			
 
 			if(parseFloat(impuestoReport.value))
 				total.value = ((((100 - parseFloat(discount)) / 100) * parseFloat(subtotal)) + parseFloat(impuestoReport.value)).toFixed(2);
@@ -322,7 +683,53 @@
 				total.value = (((100 - parseFloat(discount)) / 100) * parseFloat(subtotal)).toFixed(2)
 		}
 
+		function actualizarCampos(id){
+			this.products_add[id].quantity=	document.getElementById('c'+id).value;
+			calculatePrice(id);
+			updateTotal();
+		}
 
+		function openModal(id){
+			this.id= id
+			document.getElementById('message-text-1').value = document.getElementById('descripcion'+id).value
+			document.getElementById('desc_pr1').innerHTML 	= 'Caracteres: '+document.getElementById('descripcion'+id).value.length ?? 'Caracteres: 0' ;
+			document.getElementById('desc_pr2').innerHTML 	= 'Caracteres: '+document.getElementById('descripcion_adicional1'+id).value.length ?? 'Caracteres: 0' ;
+			document.getElementById('desc_pr3').innerHTML 	= 'Caracteres: '+document.getElementById('descripcion_adicional2'+id).value.length ?? 'Caracteres: 0' ;
+			document.getElementById('desc_pr4').innerHTML 	= 'Caracteres: '+document.getElementById('descripcion_adicional3'+id).value.length ?? 'Caracteres: 0' ;
+			document.getElementById('message-text-2').value = document.getElementById('descripcion_adicional1'+id).value
+			document.getElementById('message-text-3').value = document.getElementById('descripcion_adicional2'+id).value
+			document.getElementById('message-text-4').value = document.getElementById('descripcion_adicional3'+id).value
+			$('#exampleModal').modal();
+		}      
+		
+		function closeModal(){
+			document.getElementById('descripcion'+this.id).value = document.getElementById('message-text-1').value; 
+			document.getElementById('descripcion_adicional1'+this.id).value = document.getElementById('message-text-2').value; 
+			document.getElementById('descripcion_adicional2'+this.id).value = document.getElementById('message-text-3').value; 
+			document.getElementById('descripcion_adicional3'+this.id).value = document.getElementById('message-text-4').value; 
+
+			document.getElementById('message-text-1').value = '';
+			document.getElementById('message-text-2').value = '';
+			document.getElementById('message-text-3').value = '';
+			document.getElementById('message-text-4').value = '';
+			
+			$('#exampleModal').modal('hide')
+			this.id= null
+		}   
+
+		function mount(){
+			$.ajax({
+				url: "{{ path('list_product_api') }}",
+				type: "GET",
+				data: { search: ''},
+				success: function(response) {
+					this.products = response.products;
+				},
+				error: function(xhr) {
+				console.log(xhr.responseText);
+				}
+			});
+		}   
 
 	</script>
 {% endblock %}

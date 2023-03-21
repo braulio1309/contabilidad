@@ -50,7 +50,7 @@ class ShopSeriesController extends AbstractController
         $shop = $request->get('shop');
         $secuencia = $request->get('secuencia');
         $serie = $request->get('serie');
-        $tipoDocumento = $request->get('tipoDocumento');
+        $tipoDocumento = $request->get('codigoDocumento');
         $shop = $doctrine->getRepository(Shop::class)->findById((int) $shop);
         $shopserie = new ShopSerie();
 
@@ -60,16 +60,27 @@ class ShopSeriesController extends AbstractController
         $shopserie->setShopId($shop[0]);
         $shopserie->setSecuencia($secuencia);
         $shopserie->setSerie($serie);
-        $shopserie->setTipoDocumento($tipoDocumento);
+        $shopserie->setCodigoDocumento($tipoDocumento);
 
         $errors = $validator->validate($shopserie);
-        if(!count($errors)){
+
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Shopseries/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shopserie,
+                'shops' => $doctrine->getRepository(Shop::class)->findAll(),
+                'type' =>'POST'
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shopserie);
             $em->flush();
-            $session->getFlashBag()->add('success', 'ShopSerie creado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el ShopSerie');
+            $session->getFlashBag()->add('success', 'Serie de Tienda creado con éxito');
         }
         
         return $this->redirectToRoute('list_shopseries');
@@ -87,7 +98,7 @@ class ShopSeriesController extends AbstractController
         $shop = $request->get('shop');
         $secuencia = $request->get('secuencia');
         $serie = $request->get('serie');
-        $tipoDocumento = $request->get('tipoDocumento');
+        $tipoDocumento = $request->get('codigoDocumento');
 
         $shop = $doctrine->getRepository(Shop::class)->findById((int) $shop);
         $shopserie->setNombreComercial($name);
@@ -95,17 +106,26 @@ class ShopSeriesController extends AbstractController
         $shopserie->setShopId($shop[0]);
         $shopserie->setSecuencia($secuencia);
         $shopserie->setSerie($serie);
-        $shopserie->setTipoDocumento($tipoDocumento);
+        $shopserie->setCodigoDocumento($tipoDocumento);
         
         $errors = $validator->validate($shopserie);
 
-        if(!count($errors)){
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Shopseries/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shopserie,
+                'shops' => $doctrine->getRepository(Shop::class)->findAll()
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shopserie);
             $em->flush();
-            $session->getFlashBag()->add('success', 'ShopSerie actualizado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo actualizar el ShopSerie');
+            $session->getFlashBag()->add('success', 'Serie de Tienda actualizado con éxito');
         }
         
         return $this->redirectToRoute('list_shopseries');
@@ -120,7 +140,7 @@ class ShopSeriesController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->remove($shopserie);
         $em->flush();
-        $session->getFlashBag()->add('success', 'Shopserie eliminado con éxito');
+        $session->getFlashBag()->add('success', 'Serie de Tienda eliminado con éxito');
         
         return $this->redirectToRoute('list_shopseries');
     }

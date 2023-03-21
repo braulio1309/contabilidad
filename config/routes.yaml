@@ -72,6 +72,11 @@ create_product:
     controller: App\Controller\ProductController::create
     methods: POST
 
+list_product_api:
+    path: /admin/producto/lista_api
+    controller: App\Controller\ProductController::getProductsJson
+    methods: GET
+
 update_product:
     path: /admin/producto/actualizar/{id}
     controller: App\Controller\ProductController::update

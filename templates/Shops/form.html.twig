@@ -4,26 +4,33 @@
 	<div class="container-fluid">
 		<h1 class="h3 mb-2 text-gray-800">Tiendas</h1>
 		<p class="mb-4">Informacion de tiendas</p>
-
+		{% set errors = errors ?? [] %}
+		{% set type = type ?? '' %}
 
 		<div class='card'>
 			<div class='card-body'>
-				<form method="POST" action='{{ (data is null)? path('create_shop'): path('update_shop', {id: data.id}) }}'>
+				<form method="POST" action='{{ (type == 'POST' or data is null)? path('create_shop'): path('update_shop', {id: data.id}) }}'>
 					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<div class='form-group'>
-									<label for='email'>Nombre</label>
+									<label for='name'>Nombre</label>
 									<input type='text' class='form-control' name='name' value='{{ (data is null)? '': data.name }}' required/>
+									{% if errors and errors['name'] is defined %}
+										<div class="invalid-feedback d-block">{{errors['name'] }}</div>
+									{% endif %}
 								</div>
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
-								<label for='lastname'>Número Identificación</label>
-								<input type='text' class='form-control' name='numeroIdentificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+								<label for='numeroIdentificacion'>Número Identificación</label>
+								<input type='text' maxlength="13" class='form-control' name='numeroIdentificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+								{% if errors and errors['numero_identificacion'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['numero_identificacion'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -31,14 +38,32 @@
 					<div class='row'>
 						<div class='col-sm-6'>
 							<div class='form-group'>
-								<label for='email'>Agente retencion</label>
+								<label for='agenteRetencion'>Agente retencion</label>
 								<input type='text' class='form-control' name='agenteRetencion' value='{{ (data is null)? '': data.getAgenteRetencion() }}' required/>
+								{% if errors and errors['agenteRetencion'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['agenteRetencion'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='email'>Email</label>
 								<input type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}'/>
+								{% if errors and errors['email'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['email'] }}</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class='col-sm-6'>
+							<div class='form-group'>
+								<label for='contribuyenteEspecial'>Contribuyente Especial</label>
+								<input type='text' maxlength="20" class='form-control' name='contribuyenteEspecial' value='{{ (data is null)? '': data.getContribuyenteEspecial() }}' required/>
+								{% if errors and errors['contribuyenteEspecial'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['contribuyenteEspecial'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -46,17 +71,16 @@
 					<div class='row'>
 						<div class='col-sm-12'>
 							<div class='form-group'>
-								<label for='email'>Direccion</label>
+								<label for='address'>Direccion</label>
 								<input type='text' class='form-control' name='address' value='{{ (data is null)? '': data.getDireccionMatriz() }}'/>
+								{% if errors and errors['address'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['address'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
 					<div class='row'>
 						<div class='col-sm-12'>
-							<div class="form-check form-check-inline">
-								<input class="form-check-input" type="checkbox" name='contribuyenteEspecial' id="inlineCheckbox1" value="1" {{(data is not null and data.getContribuyenteEspecial())? 'checked': ''}}>
-								<label class="form-check-label" for="inlineCheckbox1">Contribuyente especial</label>
-							</div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="checkbox" name='regimenRimpe' id="inlineCheckbox2" value="1" {{(data is not null and data.isRegimenRimpe())? 'checked': ''}}>
 								<label class="form-check-label" for="inlineCheckbox2">Regimen Rimpe</label>
@@ -68,9 +92,7 @@
 						</div>
 					</div>
 
-
-					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
-
+					<input type="submit" class='btn btn-primary' value='{{ (type == 'POST' or data is null)? 'Crear': 'Actualizar' }}'/>
 
 				</form>
 			</div>

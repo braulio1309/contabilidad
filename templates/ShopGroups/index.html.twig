@@ -2,10 +2,9 @@
 
 {% block body %}
 	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">ShopGroup</h1>
-		<p class="mb-4">Informacion de ShopGroup</p>
+		<h1 class="h3 text-gray-800">Grupos de tiendas</h1>
+		<p class="">Informacion de Grupos de tiendas</p>
 
-		<a href='{{ path('show_form_shopgroup') }}' class='btn btn-primary mb-4'>Nuevo</a>
 		{% for message in app.session.flashbag.get('success') %}
 			<div class="alert alert-success" role="alert">
 				{{message}}
@@ -26,8 +25,11 @@
 
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
-			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">ShopGroup</h6>
+			<div class="card-header py-3 d-flex">
+				<h6 class="m-0 font-weight-bold text-primary col-2 my-auto">Grupos de tiendas</h6>
+				<div class="col-10 d-block">
+					<a href='{{ path('show_form_shopgroup') }}' class='btn btn-primary float-right'>Nuevo</a>
+				</div>
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
@@ -53,15 +55,13 @@
 									<td>{{row.id}}</td>
 									<td>{{row.name}}</td>
 									<td>
-										<div class='row'>
-											<div class'col-sm-6'>
-												<a href='{{ path('show_form_shopgroup', {id: row.id})}}' class='btn btn-success'>Editar</a>
-											</div>
-											<div class'col-sm-6'>
-												<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{row.id}}">
-													Eliminar
-												</button>
-											</div>
+										<div class='row text-center mx-auto justify-content-center'>
+											<a href='{{ path('show_form_shopgroup', {id: row.id})}}' class='btn btn-sm btn-success'>
+												<i class="fa fa-edit" aria-hidden="true"></i>
+											</a>
+											<button type="button" class="btn btn-sm btn-danger ml-1" data-toggle="modal" data-target="#delete{{row.id}}">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
 										</div>
 									</td>
 								</tr>

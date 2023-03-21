@@ -4,11 +4,13 @@
 	<div class="container-fluid">
 		<h1 class="h3 mb-2 text-gray-800">Clientes</h1>
 		<p class="mb-4">Informacion de cliente</p>
+		{% set errors = errors ?? [] %}
+		{% set type = type ?? '' %}
 
 
 		<div class='card'>
 			<div class='card-body'>
-				<form method="POST" action='{{ (data is null)? path('create_customer'): path('update_customer', {id: data.id}) }}'>
+				<form id="form" method="POST" action='{{ (type == 'POST' or data is null)? path('create_customer'): path('update_customer', {id: data.id}) }}'>
                     <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
@@ -16,17 +18,24 @@
 							<div class='form-group'>
 								<label for='name'>Tipo Identificación</label>
 								<select class='form-control' name='tipo_identificacion'>
-                                    <option value='RUC'>RUC</option>
-                                    <option value='Pasaporte'>Pasaporte</option>
-                                    <option value='Cedula'>Cedula</option>
-                                    <option value='Consumidor final'>Consumidor final</option>
+                                    <option value='04' {{data and '04' is same as(data.getTipoIdentificacion())? 'selected': ''}}>RUC</option>
+                                    <option value='05' {{data and '05' is same as(data.getTipoIdentificacion())? 'selected': ''}}>Cedula</option>
+                                    <option value='06' {{data and '06' is same as(data.getTipoIdentificacion())? 'selected': ''}}>Pasaporte</option>
+                                    <option value='07' {{data and '07' is same as(data.getTipoIdentificacion())? 'selected': ''}}>Consumidor final</option>
                                 </select>
+								{% if errors and errors['tipo_identificacion'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['tipo_identificacion'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='lastname'>Número Identificación</label>
-								<input type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+								<input type='text' maxlength="15" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').replace(/(\..*)\./g, '$1');"  class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' required/>
+								{% if errors and errors['numero_identificacion'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['numero_identificacion'] }}</div>
+								{% endif %}
+								
 							</div>
 						</div>
 					</div>
@@ -35,13 +44,19 @@
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='email'>Cliente</label>
-								<input type='text' class='form-control' name='customer' value='{{ (data is null)? '': data.company }}' required/>
+								<input type='text' maxlength="300" class='form-control' name='customer' value='{{ (data is null)? '': data.company }}' required/>
+								{% if errors and errors['customer'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['customer'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
-							<div class='form-group'>
+							<div class='form-group div-emails'>
 								<label for='email'>Email</label>
-								<input type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}'/>
+								<input type='text' class='form-control' id="emails" name='email' value='{{ (data is null)? '': data.email }}'/>
+								{% if errors and errors['email'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['email'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -50,13 +65,19 @@
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='email'>Telefono</label>
-								<input type='text' class='form-control' name='phone' value='{{ (data is null)? '': data.phone }}' required/>
+								<input type='text' class='form-control' oninput="this.value = this.value.replace(/[^+0-9 -]/g, '').replace(/(\..*)\./g, '$1');" name='phone' value='{{ (data is null)? '': data.phone }}'/>
+								{% if errors and errors['phone'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['phone'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='email'>Ciudad</label>
 								<input type='text' class='form-control' name='city' value='{{ (data is null)? '': data.city }}'/>
+								{% if errors and errors['city'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['city'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -64,17 +85,59 @@
                     <div class='row'>
 						<div class='col-sm-12'>
 							<div class='form-group'>
-								<label for='email'>Direccion</label>
-								<input type='text' class='form-control' name='address' value='{{ (data is null)? '': data.address1 }}' />
+								<label for='address'>Direccion</label>
+								<input type='text' class='form-control' maxlength="128" name='address' value='{{ (data is null)? '': data.address1 }}' />
+								{% if errors and errors['address'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['address'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
 
-                    <input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
-
+                    <input type="submit" class='btn btn-primary btn-submit-press' value='{{ (type == 'POST' or data is null)? 'Crear': 'Actualizar' }}'/>
 
 				</form>
 			</div>
 		</div>
     </div>
-	{% endblock %}
+
+	<script>
+		$('#form').on('submit', function(e) {
+			e.preventDefault();
+			validateMultipleEmails($('#emails').val());
+		})
+
+		function validateMultipleEmails(emailInput) {
+			// Get value on emails input as a string
+			var emails = emailInput;
+			
+			// Split string by comma into an array
+			emails = emails.split(";");
+
+			var valid = true;
+			var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			
+			var invalidEmails = [];
+			
+			for (var i = 0; i < emails.length; i++) {
+				// Trim whitespaces from email address
+				emails[i] = emails[i].trim();
+				
+				// Check email against our regex to determine if email is valid
+				if( emails[i] == "" || ! regex.test(emails[i])){
+					invalidEmails.push(emails[i]);
+				}
+			}
+			
+			// Output invalid emails
+			$('.form-group .text-danger').remove();
+			if(invalidEmails != 0) {
+				$('.div-emails').append('<p class="text-danger">Correo invalido: ' + invalidEmails.join('; ') + '</p>');
+			}else{
+				$('#form')[0].submit();
+			}
+
+		}
+	</script>
+
+{% endblock %}

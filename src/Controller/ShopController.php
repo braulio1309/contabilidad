@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\customerPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use App\Trait\CustomerTrait;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use App\Entity\Shop;
 use App\Repository\ShopRepository;
@@ -16,7 +17,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ShopController extends AbstractController
 {
-    
+    use CustomerTrait;
+
     public function index(Request $request, ManagerRegistry $doctrine)
     {
 
@@ -61,17 +63,34 @@ class ShopController extends AbstractController
         $shop->setNumeroIdentificacion($numeroIdentificacion);
         $shop->setRegimenRimpe(($regimenRimpe)? true: false);
         $shop->setObligadoContabilidad(($obligadoContabiliadad)? true : false);
-        $shop->setContribuyenteEspecial(($contribuyenteEspecial)? 'Si': 'No');
-
+        $shop->setContribuyenteEspecial($contribuyenteEspecial);
+        if($this->validarRucPersonaNatural($numeroIdentificacion) || $this->validarRucSociedadPrivada($numeroIdentificacion) || $this->validarRucSociedadPublica($numeroIdentificacion)){
+            $flag=true;
+        }else{
+            $flag=false;
+        };
 
         $errors = $validator->validate($shop);
-        if(!count($errors)){
+
+        if(!$flag || count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            if(!$flag){
+                $errores['numero_identificacion'] = 'Ingrese un número de identificación valido';
+            }
+            return $this->render('/Shops/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shop,
+                'type' =>'POST'
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shop);
             $em->flush();
             $session->getFlashBag()->add('success', 'Tienda creado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el Tienda');
         }
         
         return $this->redirectToRoute('list_shop');
@@ -100,17 +119,34 @@ class ShopController extends AbstractController
         $shop->setNumeroIdentificacion($numeroIdentificacion);
         $shop->setRegimenRimpe(($regimenRimpe)? true: false);
         $shop->setObligadoContabilidad(($obligadoContabiliadad)? true : false);
-        $shop->setContribuyenteEspecial(($contribuyenteEspecial)? 'Si': 'No');
-
+        $shop->setContribuyenteEspecial($contribuyenteEspecial);
+        $flag=true;
+        if($this->validarRucSociedadPrivada($numeroIdentificacion) || $this->validarRucSociedadPublica($numeroIdentificacion)){
+                $flag=true;
+        }else{
+            $flag=false;
+        };
+        
         $errors = $validator->validate($shop);
 
-        if(!count($errors)){
+        if(!$flag || count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            if(!$flag){
+                $errores['numero_identificacion'] = 'Ingrese un número de identificación valido';
+            }
+            return $this->render('/Shops/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shop
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shop);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Tienda actualizado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo actualizar el Tienda');
+            $session->getFlashBag()->add('success', 'Tienda actualizada con éxito');
         }
         
         return $this->redirectToRoute('list_shop');

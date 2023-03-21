@@ -10,10 +10,12 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="ps_employee")
  * @ORM\Entity(repositoryClass=EmployeeRepository::class)
+ * @UniqueEntity(fields={"email"}, message="Este email ya está en uso.")
  */
 class Employee implements
 UserInterface,
@@ -40,13 +42,7 @@ PasswordHasherAwareInterface
     private $lastname;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Email(
-     *     message = "El email '{{ value }}' no es valido."
-     * )
-     * @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
+     * @ORM\Column(type="string", length=255,unique=true)
      */
     private $email;
 

@@ -8,16 +8,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use App\Entity\Product;
 use App\Entity\Taxes;
+use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\ProductRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class ProductController extends AbstractController
 {
-    
+    public $entityManager;
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
     public function index(Request $request, ManagerRegistry $doctrine)
     {
         $data = $doctrine->getRepository(Product::class);
@@ -46,7 +52,6 @@ class ProductController extends AbstractController
     {
         $session = $request->getSession();        
         $session->start();
-        
         $name = $request->get('name');
         $code = $request->get('code');
         $description = $request->get('description');
@@ -55,9 +60,9 @@ class ProductController extends AbstractController
         $description3 = $request->get('description3');
         $price = $request->get('price');
         $tax = $request->get('tax');
-
+        
         $product = new Product();
-
+        
         $product->setName($name);
         $product->setCode($code);
         $product->setPrice($price);
@@ -68,17 +73,27 @@ class ProductController extends AbstractController
         $taxes = $doctrine->getRepository(Taxes::class);
         $taxes = $taxes->find($tax);
         $product->setTax($taxes);
-
         $errors = $validator->validate($product);
-        if(!count($errors)){
+
+        
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Products/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $product,
+                'taxes' => $doctrine->getRepository(Taxes::class)->findAll(),
+                'type' =>'POST'
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
             $session->getFlashBag()->add('success', 'Producto creado con éxito');
-        }else {
-            $session->getFlashBag()->add('danger', 'No se pudo crear el Producto');
         }
-
         
         return $this->redirectToRoute('list_product');
     }
@@ -113,13 +128,22 @@ class ProductController extends AbstractController
 
         $errors = $validator->validate($product);
 
-        if(!count($errors)){
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Products/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $product,
+                'taxes' => $doctrine->getRepository(Taxes::class)->findAll()
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($product);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Producto actualizado con éxito');
-        }else {
-            $session->getFlashBag()->add('danger', 'No se pudo actualizar el Producto');
+            $session->getFlashBag()->add('success', 'Producto creado con éxito');
         }
         
         return $this->redirectToRoute('list_product');
@@ -139,5 +163,31 @@ class ProductController extends AbstractController
         return $this->redirectToRoute('list_product');
     }
 
-    
+    public function getProductsJson(Request $request, ManagerRegistry $doctrine)
+    {
+        if ($request->isXmlHttpRequest()) {
+            // Procesa los datos de la petición AJAX
+            $param1 = $request->get('search');
+            $data = $this->entityManager->getRepository(Product::class)->findAll();
+            // $query = $data->createQueryBuilder('a')
+            //             ->where('a.name LIKE :name')
+            //             ->setParameter('name', '%'.$param1.'%')
+            //             ->getQuery()->getResult();
+            foreach($data as $product){
+                $pro[] = [
+                    'id' => $product->getId(),
+                    'name' => $product->getName(),
+                    'code' => $product->getCode(),
+                    'price' => $product->getPrice(),
+                    'quantity' => 1,
+                    'tax' => $product->getTax()->getPorcentaje()
+                ];
+            }
+            // Devuelve una respuesta en formato JSON
+            return new JsonResponse(array(
+            'status' => 'ok',
+            'products' => $pro,
+            ));
+        }
+    }
 }

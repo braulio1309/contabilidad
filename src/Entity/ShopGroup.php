@@ -7,10 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="sp_shopgroup")
  * @ORM\Entity(repositoryClass=ShopGroupRepository::class)
+ * @UniqueEntity(fields={"name"}, message="Este nombre ya está en uso.")
  */
 class ShopGroup
 {

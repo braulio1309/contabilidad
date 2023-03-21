@@ -41,7 +41,7 @@ class EmployeeController extends AbstractController
     {
         $session = $request->getSession();        
         $session->start();
-        
+
         $email = $request->get('email');
         $firstname = $request->get('firstname');
         $lastname = $request->get('lastname');
@@ -60,16 +60,20 @@ class EmployeeController extends AbstractController
         $user->setEmail($email);
         $errors = $validator->validate($user);
 
-        if(!count($errors)){
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Employees/form.html.twig', ['errors' => $errores, 'data' => $user,'type' =>'POST']);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
             $session->getFlashBag()->add('success', 'Empleado creado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el empleado');
         }
-        
         return $this->redirectToRoute('list_employees');
+        
     }
 
     public function update($id, Request $request, UserPasswordHasherInterface $passwordEncoder, ValidatorInterface $validator, ManagerRegistry $doctrine)
@@ -98,13 +102,17 @@ class EmployeeController extends AbstractController
         $user->setEmail($email);
         $errors = $validator->validate($user);
 
-        if(!count($errors)){
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Employees/form.html.twig', ['errors' => $errores, 'data' => $user]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
             $session->getFlashBag()->add('success', 'Empleado actualizado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo actualizar el empleado');
         }
         
         return $this->redirectToRoute('list_employees');

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="sales")
+ * @ORM\Table(name="sp_ventas")
  * @ORM\Entity(repositoryClass=VentaRepository::class)
  */
 class Venta
@@ -17,26 +17,24 @@ class Venta
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_venta",type="integer")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Shop::class, inversedBy="ventas")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop")
      */
     private $shop_id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="ventas")
+     * @ORM\JoinColumn(name="id_customer", referencedColumnName="id_customer")
      */
     private $customer_id;
 
     /**
      * @ORM\Column(type="string", length=50, nullable=true)
-     * @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
      */
     private $tipo_identificacion;
 
@@ -45,6 +43,12 @@ class Venta
      *
      */
     private $numero_identificacion;
+    
+    /**
+     * @ORM\Column(type="string", length=2)
+     *
+     */
+    private $codigo_documento;
 
     /**
      * @ORM\Column(type="text")
@@ -62,10 +66,10 @@ class Venta
      */
     private $fecha_emision;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $tipo_documento;
+    // /**
+    //  * @ORM\Column(type="string", length=50)
+    //  */
+    // private $tipo_documento;
 
     /**
      * @ORM\Column(type="string", length=10)
@@ -143,24 +147,24 @@ class Venta
     private $total;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $forma_pago;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      */
     private $informacion_adicional;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $created_at;
+    private $date_add;
 
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $updated_at;
+    private $date_upd;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
@@ -168,12 +172,13 @@ class Venta
     private $anulado;
 
     /**
-     * @ORM\OneToMany(targetEntity=VentaTax::class, mappedBy="venta_id")
+     * @ORM\OneToMany(targetEntity=VentaTax::class, mappedBy="id_venta")
      */
     private $ventaTaxes;
 
     /**
      * @ORM\OneToMany(targetEntity=VentaDetail::class, mappedBy="venta_id", cascade={"persist"})
+     * @ORM\JoinColumn(name="id_venta", referencedColumnName="id_venta")
      */
     private $ventaDetails;
 
@@ -235,6 +240,18 @@ class Venta
 
         return $this;
     }
+    
+    public function getCodigoDocumento(): ?string
+    {
+        return $this->codigo_documento;
+    }
+
+    public function setCodigoDocumento(string $codigo_documento): self
+    {
+        $this->codigo_documento = $codigo_documento;
+
+        return $this;
+    }
 
     public function getAddress1(): ?string
     {
@@ -272,17 +289,17 @@ class Venta
         return $this;
     }
 
-    public function getTipoDocumento(): ?string
-    {
-        return $this->tipo_documento;
-    }
+    // public function getTipoDocumento(): ?string
+    // {
+    //     return $this->tipo_documento;
+    // }
 
-    public function setTipoDocumento(string $tipo_documento): self
-    {
-        $this->tipo_documento = $tipo_documento;
+    // public function setTipoDocumento(string $tipo_documento): self
+    // {
+    //     $this->tipo_documento = $tipo_documento;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getSerie(): ?string
     {
@@ -356,14 +373,14 @@ class Venta
         return $this;
     }
 
-    public function getFechaAutorización(): ?\DateTimeInterface
+    public function getFechaAutorizacion(): ?\DateTimeInterface
     {
-        return $this->fecha_autorización;
+        return $this->fecha_autorizacion;
     }
 
-    public function setFechaAutorizacion(?\DateTimeInterface $fecha_autorización): self
+    public function setFechaAutorizacion(?\DateTimeInterface $fecha_autorizacion): self
     {
-        $this->fecha_autorización = $fecha_autorización;
+        $this->fecha_autorizacion = $fecha_autorizacion;
 
         return $this;
     }
@@ -490,24 +507,24 @@ class Venta
 
     public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->date_add;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTimeImmutable $date_add): self
     {
-        $this->created_at = $created_at;
+        $this->date_add = $date_add;
 
         return $this;
     }
 
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
-        return $this->updated_at;
+        return $this->date_upd;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(\DateTimeImmutable $date_upd): self
     {
-        $this->updated_at = $updated_at;
+        $this->date_upd = $date_upd;
 
         return $this;
     }

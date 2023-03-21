@@ -2,13 +2,14 @@
 
 {% block body %}
 	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">shopgroups</h1>
-		<p class="mb-4">Informacion de shopgroupos</p>
-
+		<h1 class="h3 mb-2 text-gray-800">Grupo de Tiendas</h1>
+		<p class="mb-4">Informacion de Grupo de tiendas</p>
+		{% set errors = errors ?? [] %}
+		{% set type = type ?? '' %}
 
 		<div class='card'>
 			<div class='card-body'>
-				<form id='shopgroups' method="POST" action='{{ (data is null)? path('create_shopgroup'): path('update_shopgroup', {id: data.id}) }}'>
+				<form id='shopgroups' method="POST" action='{{ (type == 'POST' or data is null)? path('create_shopgroup'): path('update_shopgroup', {id: data.id}) }}'>
 					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
@@ -17,12 +18,15 @@
 								<div class='form-group'>
 									<label for='email'>Nombre</label>
 									<input type='text' class='form-control' name='name' value='{{ (data is null)? '': data.name }}' required/>
+									{% if errors and errors['name'] is defined %}
+										<div class="invalid-feedback d-block">{{errors['name'] }}</div>
+									{% endif %}
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+					<input type="submit" class='btn btn-primary' value='{{ (type == 'POST' or data is null)? 'Crear': 'Actualizar' }}'/>
 
 
 				</form>

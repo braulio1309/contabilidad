@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="taxes")
+ * @ORM\Table(name="sp_taxes")
  * @ORM\Entity(repositoryClass=TaxesRepository::class)
  */
 class Taxes
@@ -16,7 +16,7 @@ class Taxes
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_tax",type="integer")
      */
     private $id;
 
@@ -29,16 +29,6 @@ class Taxes
      * @ORM\Column(type="decimal", precision=8, scale=2)
      */
     private $porcentaje;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=2)
-     */
-    private $percent;
 
     /**
      * @ORM\OneToMany(targetEntity=Product::class, mappedBy="tax")
@@ -75,30 +65,6 @@ class Taxes
     public function setPorcentaje(string $porcentaje): self
     {
         $this->porcentaje = $porcentaje;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getPercent(): ?string
-    {
-        return $this->percent;
-    }
-
-    public function setPercent(string $percent): self
-    {
-        $this->percent = $percent;
 
         return $this;
     }

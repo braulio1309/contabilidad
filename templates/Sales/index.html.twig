@@ -1,11 +1,12 @@
 {% extends 'Layouts/header.html.twig' %}
 
 {% block body %}
-	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">Ventas</h1>
-		<p class="mb-4">Informacion de ventas</p>
 
-		<a href='{{ path('show_form_sale') }}' class='btn btn-primary mb-4'>Nuevo</a>
+
+	<div class="container-fluid">
+		<h1 class="h3 text-gray-800">Ventas</h1>
+		<p class="">Informacion de ventas</p>
+
 		{% for message in app.session.flashbag.get('success') %}
 			<div class="alert alert-success" role="alert">
 				{{message}}
@@ -26,8 +27,11 @@
 
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
-			<div class="card-header py-3">
-				<h6 class="m-0 font-weight-bold text-primary">Ventas</h6>
+			<div class="card-header py-3 d-flex">
+				<h6 class="m-0 font-weight-bold text-primary col-2 my-auto">Ventas</h6>
+				<div class="col-10 d-block">
+					<a href='{{ path('show_form_sale') }}' class='btn btn-primary float-right'>Nuevo</a>
+				</div>
 			</div>
 			<div class="card-body">
 				<div class="table-responsive">
@@ -36,10 +40,16 @@
 							<tr>
                                 <th>#</th>
 								<th>Cliente</th>
+								<th>Identificación</th>
+								<th>Serie</th>
+								<th>Secuencia</th>
 								<th>Subtotal</th>
                                 <th>Total</th>
+                                <th>Ambiente</th>
                                 <th>Estado</th>
-								<th>Fecha</th>
+								<th>Fecha emisión</th>
+								<th>Fecha autorización</th>
+								<th>Clave acceso</th>
 								<th>Acciones</th>
 							</tr>
 						</thead>
@@ -47,10 +57,16 @@
 							<tr>
 								<th>#</th>
 								<th>Cliente</th>
+								<th>Identificación</th>
+								<th>Serie</th>
+								<th>Secuencia</th>
 								<th>Subtotal</th>
                                 <th>Total</th>
+                                <th>Ambiente</th>
                                 <th>Estado</th>
-								<th>Fecha</th>
+								<th>Fecha emisión</th>
+								<th>Fecha autorización</th>
+								<th>Clave acceso</th>
 								<th>Acciones</th>
 							</tr>
 						</tfoot>
@@ -60,20 +76,44 @@
 								<tr>
 									<td>{{row.id}}</td>
 									<td>{{row.getCustomerId().company}}</td>
+									<td>{{row.getCustomerId().getNumeroIdentificacion()}}</td>
+									<td>{{row.getSerie()}}</td>
+									<td>{{row.getSecuencia()}}</td>
 									<td>${{row.getSubtotal()}}</td>
 									<td>${{row.getTotal()}}</td>
-                                    <td>{{row.getXmlEstado()}}</td>
-                                    <td>{{row.getCreatedAt()|date('Y-m-d')}}</td>
 									<td>
-										<div class='row'>
-											<div class'col-sm-6'>
-												<a href='{{ path('show_form_sale', {id: row.id})}}' class='btn btn-success'>Editar</a>
-											</div>
-											<div class'col-sm-6'>
-												<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#delete{{row.id}}">
-													Eliminar
-												</button>
-											</div>
+										{% if (row.getAmbiente() == '1') %}
+											Pruebas
+										{% elseif (row.getAmbiente() == '2') %}
+											Producción
+										{% endif %}
+									</td>
+                                    <td>
+										{% if (row.getXmlEstado() == '0') %}
+											Para enviar
+										{% elseif (row.getXmlEstado() == '1') %}
+											Pendiente
+										{% elseif (row.getXmlEstado() == '2') %}
+											Recibida
+										{% elseif (row.getXmlEstado() == '3') %}
+											Devuelta
+										{% elseif (row.getXmlEstado() == '4') %}
+											Autorizada
+										{% else  %}
+											No autorizada
+										{% endif %}
+									</td>
+                                    <td>{{row.getCreatedAt()|date('Y-m-d')}}</td>
+                                    <td>{{row.getFechaAutorizacion()|date('Y-m-d')}}</td>
+									<td>{{row.getClaveAcceso()}}</td>
+									<td>
+										<div class='row text-center mx-auto justify-content-center'>
+											<a href='{{ path('show_form_sale', {id: row.id})}}' class='btn btn-sm btn-success'>
+												<i class="fa fa-edit" aria-hidden="true"></i>
+											</a>
+											<button type="button" class="btn btn-sm btn-danger ml-1" data-toggle="modal" data-target="#delete{{row.id}}">
+												<i class="fa fa-trash" aria-hidden="true"></i>
+											</button>
 										</div>
 									</td>
 								</tr>
@@ -106,8 +146,12 @@
 		</div>
 	</div>
 </div>
+
 <script>
-	$(document).ready(function () {
-$('#example').DataTable();
-});
+
+$(document).ready(function() {
+  $("#example").dataTable({});
+} );
+	
+
 </script>{% endblock %}

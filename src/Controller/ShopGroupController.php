@@ -48,13 +48,23 @@ class ShopGroupController extends AbstractController
         $shopgroup->setName($name);
 
         $errors = $validator->validate($shopgroup);
-        if(!count($errors)){
+       
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Shopgroups/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shopgroup,
+                'type' =>'POST'
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shopgroup);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Shopgroupo creado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el Shopgroupo');
+            $session->getFlashBag()->add('success', 'Grupo de Tienda creado con éxito');
         }
         
         return $this->redirectToRoute('list_shopgroup');
@@ -73,13 +83,21 @@ class ShopGroupController extends AbstractController
         
         $errors = $validator->validate($shopgroup);
 
-        if(!count($errors)){
+        if(count($errors)){
+            $errores=[];
+            foreach($errors as $error){
+                $errores[$error->getpropertyPath()] = $error->getMessage();
+            }
+            return $this->render('/Shopgroups/form.html.twig', 
+            [
+                'errors' => $errores, 
+                'data' => $shopgroup
+            ]);
+        }else {
             $em = $this->getDoctrine()->getManager();
             $em->persist($shopgroup);
             $em->flush();
-            $session->getFlashBag()->add('success', 'Shopgroupo actualizado con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo actualizar el Shopgroupo');
+            $session->getFlashBag()->add('success', 'Grupo de Tienda creado con éxito');
         }
         
         return $this->redirectToRoute('list_shopgroup');

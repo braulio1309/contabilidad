@@ -6,7 +6,7 @@ use App\Repository\VentaDetailRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="sales_details")
+ * @ORM\Table(name="sp_ventas_detail")
  * @ORM\Entity(repositoryClass=VentaDetailRepository::class)
  */
 class VentaDetail
@@ -14,19 +14,19 @@ class VentaDetail
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\Column(name="id_venta_detail",type="integer")
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Product::class)
-     * @ORM\JoinColumn(nullable=false)
+    * @ORM\JoinColumn(name="id_product", referencedColumnName="id_product")
      */
-    private $product_id;
+    private $id_product;
 
     /**
      * @ORM\ManyToOne(targetEntity=Venta::class, inversedBy="ventaDetails")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(name="id_venta", referencedColumnName="id_venta")
      */
     private $venta_id;
 
@@ -63,12 +63,17 @@ class VentaDetail
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2)
      */
-    private $product_prie;
+    private $product_price;
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
      */
     private $product_subtotal;
+    
+    /**
+     * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
+     */
+    private $product_descuento;
 
     /**
      * @ORM\Column(type="decimal", precision=8, scale=2, nullable=true)
@@ -78,7 +83,7 @@ class VentaDetail
     /**
      * @ORM\Column(type="decimal",precision=8, scale=2, nullable=true)
      */
-    private $tax_id;
+    private $id_tax;
 
     public function getId(): ?int
     {
@@ -87,12 +92,12 @@ class VentaDetail
 
     public function getProductId(): ?Product
     {
-        return $this->product_id;
+        return $this->id_product;
     }
 
-    public function setProductId(?Product $product_id): self
+    public function setProductId(?Product $id_product): self
     {
-        $this->product_id = $product_id;
+        $this->id_product = $id_product;
 
         return $this;
     }
@@ -183,12 +188,12 @@ class VentaDetail
 
     public function getProductPrice(): ?string
     {
-        return $this->product_prie;
+        return $this->product_price;
     }
 
-    public function setProductPrice(string $product_prie): self
+    public function setProductPrice(string $product_price): self
     {
-        $this->product_prie = $product_prie;
+        $this->product_price = $product_price;
 
         return $this;
     }
@@ -201,6 +206,18 @@ class VentaDetail
     public function setProductSubtotal(?string $product_subtotal): self
     {
         $this->product_subtotal = $product_subtotal;
+
+        return $this;
+    }
+    
+    public function getProductDescuento(): ?string
+    {
+        return $this->product_descuento;
+    }
+
+    public function setProductDescuento(?string $product_descuento): self
+    {
+        $this->product_descuento = $product_descuento;
 
         return $this;
     }
@@ -219,12 +236,12 @@ class VentaDetail
 
     public function getTaxId(): ?int
     {
-        return $this->tax_id;
+        return $this->id_tax;
     }
 
-    public function setTaxId($tax_id): self
+    public function setTaxId($id_tax): self
     {
-        $this->tax_id = $tax_id;
+        $this->id_tax = $id_tax;
 
         return $this;
     }

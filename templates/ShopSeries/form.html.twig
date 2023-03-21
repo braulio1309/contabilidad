@@ -2,13 +2,15 @@
 
 {% block body %}
 	<div class="container-fluid">
-		<h1 class="h3 mb-2 text-gray-800">shopseries</h1>
-		<p class="mb-4">Informacion de shopserieos</p>
+		<h1 class="h3 mb-2 text-gray-800">Series de Tiendas</h1>
+		<p class="mb-4">Informacion de Series de Tiendas</p>
+		{% set errors = errors ?? [] %}
+		{% set type = type ?? '' %}
 
 
 		<div class='card'>
 			<div class='card-body'>
-				<form id='shopseries' method="POST" action='{{ (data is null)? path('create_shopseries'): path('update_shopseries', {id: data.id}) }}'>
+				<form id='shopseries' method="POST" action='{{ (type == 'POST' or data is null)? path('create_shopseries'): path('update_shopseries', {id: data.id}) }}'>
 					<input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
@@ -16,6 +18,9 @@
 							<div class='form-group'>
 								<label for='email'>Nombre establecimiento</label>
 								<input type='text' class='form-control' name='name' value='{{ (data is null)? '': data.getNombreComercial() }}' required/>
+								{% if errors and errors['nombre_comercial'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['nombre_comercial'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 
@@ -27,6 +32,9 @@
 										<option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
 									{% endfor %}
 								</select>
+								{% if errors and errors['shop'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['shop'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -34,27 +42,38 @@
 					<div class='row'>
 						<div class='col-sm-4'>
 							<div class='form-group'>
-								<label for='name'>Tipo Identificación</label>
-								<select class='form-control' name='tipoDocumento'>
-									<option value='RUC'>RUC</option>
-									<option value='Pasaporte'>Pasaporte</option>
-									<option value='Cedula'>Cedula</option>
-									<option value='Consumidor final'>Consumidor final</option>
+								<label for='name'>Código documento</label>
+								<select class='form-control' name='codigoDocumento'>
+									<option value='01'>Factura</option>
+									<option value='03'>Liquidación</option>
+									<option value='04'>Nota de crédito</option>
+									<option value='05'>Nota de debito</option>
+									<option value='06'>Guía remisión</option>
+									<option value='07'>Comprobante de retención</option>
 								</select>
+								{% if errors and errors['codigoDocumento'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['codigoDocumento'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Serie</label>
-								<input type='text' class='form-control' name='serie' value='{{ (data is null)? '': data.serie }}' required/>
+								<input type='text' class='form-control' maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" name='serie' value='{{ (data is null)? '': data.serie }}' required/>
+								{% if errors and errors['serie'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['serie'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Secuencia</label>
-								<input type='text' class='form-control' name='secuencia' value='{{ (data is null)? '': data.secuencia }}' required/>
+								<input type='text' class='form-control' oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*)\./g, '$1');" maxlength="9" name='secuencia' value='{{ (data is null)? '': data.secuencia }}' required/>
+								{% if errors and errors['secuencia'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['secuencia'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -65,12 +84,15 @@
 								<div class='form-group'>
 									<label for='email'>Dirección del establecimiento</label>
 									<textarea class="form-control" name="address" form="shopseries" rows="3" placeholder='Dirección'>{{ (data is null)? '': data.getDireccionEstablecimiento() }}</textarea>
+									{% if errors and errors['address'] is defined %}
+										<div class="invalid-feedback d-block">{{errors['address'] }}</div>
+									{% endif %}
 								</div>
 							</div>
 						</div>
 					</div>
 
-					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
+					<input type="submit" class='btn btn-primary' value='{{ (type == 'POST' or data is null)? 'Crear': 'Actualizar' }}'/>
 
 
 				</form>

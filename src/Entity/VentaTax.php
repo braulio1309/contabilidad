@@ -6,7 +6,7 @@ use App\Repository\VentaTaxRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="sales_taxes")
+ * @ORM\Table(name="sp_ventas_detail_tax")
  * @ORM\Entity(repositoryClass=VentaTaxRepository::class)
  */
 class VentaTax

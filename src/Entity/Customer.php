@@ -7,37 +7,33 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="ps_customer")
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
+ * @UniqueEntity(fields={"numero_identificacion"}, message="Este número de identificación ya está en uso.")
+ * @UniqueEntity(fields={"email"}, message="Este email ya está en uso.")
  */
 class Customer
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="id",type="integer")
+     * @ORM\Column(name="id_customer",type="integer")
      */
     private $id;
 
     /**
      * @ORM\Column( type="string", length=30, nullable=true)
      * @Assert\NotBlank
-     * @Assert\Choice({"RUC", "Pasaporte", "Consumidor final", "Cedula"})
-     *  @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
+     * @Assert\Choice({"04", "05", "06","07"})
      */
     private $tipo_identificacion;
 
     /**
      * @ORM\Column(type="string", length=15)
      * @Assert\NotBlank
-     *  @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
-     * 
      */
     private $numero_identificacion;
 

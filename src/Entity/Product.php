@@ -5,17 +5,19 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Table(name="ps_product")
  * @ORM\Entity(repositoryClass=ProductRepository::class)
+ * @UniqueEntity(fields={"code"}, message="Este ccodigo_producto ya está en uso.")
  */
 class Product
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
-     * @ORM\Column(name="id",type="integer")
+     * @ORM\Column(name="id_product",type="integer")
      */
     private $id;
 
@@ -26,11 +28,8 @@ class Product
     private $name;
 
     /**
-     * @ORM\Column(name="codigo_producto",type="string", length=255)
+     * @ORM\Column(name="codigo_producto",type="string", length=10,unique=true)
      * @Assert\NotBlank
-     *  @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
      */
     private $code;
 
@@ -63,6 +62,7 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity=Taxes::class, inversedBy="products")
+     * @ORM\JoinColumn(name="tax_id", referencedColumnName="id_tax")
      */
     private $tax;
 
@@ -103,18 +103,6 @@ class Product
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getY(): ?string
-    {
-        return $this->y;
-    }
-
-    public function setY(string $y): self
-    {
-        $this->y = $y;
 
         return $this;
     }

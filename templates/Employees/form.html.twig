@@ -4,11 +4,12 @@
 	<div class="container-fluid">
 		<h1 class="h3 mb-2 text-gray-800">Empleados</h1>
 		<p class="mb-4">Informacion de empleados</p>
-
+		{% set errors = errors ?? [] %}
+		{% set type = type ?? '' %}
 
 		<div class='card'>
 			<div class='card-body'>
-				<form method="POST" action='{{ (data is null)? path('create_employee'): path('update_employee', {id: data.id}) }}'>
+				<form method="POST" action='{{ (type == 'POST' or data is null)? path('create_employee'): path('update_employee', {id: data.id}) }}'>
                     <input type="hidden" name="token" value="{{ csrf_token('delete-item') }}"/>
 
 					<div class='row'>
@@ -16,12 +17,18 @@
 							<div class='form-group'>
 								<label for='name'>Nombre</label>
 								<input type='text' class='form-control' name='firstname' value='{{ (data is null)? '': data.firstname }}' required/>
+								{% if errors and errors['firstname'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['firstname'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='lastname'>Apellido</label>
 								<input type='text' class='form-control' name='lastname' value='{{ (data is null)? '': data.lastname }}' required/>
+								{% if errors and errors['lastname'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['lastname'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -31,18 +38,23 @@
 							<div class='form-group'>
 								<label for='email'>Email</label>
 								<input type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}' required/>
+								{% if errors and errors['email'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['email'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 						<div class='col-sm-6'>
 							<div class='form-group'>
 								<label for='email'>Contraseña</label>
 								<input type='password' class='form-control' name='password'/>
+								{% if errors and errors['password'] is defined %}
+									<div class="invalid-feedback d-block">{{errors['password'] }}</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
 
-                    <input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>
-
+                    <input type="submit" class='btn btn-primary' value='{{ (type == 'POST' or data is null)? 'Crear': 'Actualizar' }}'/>
 
 				</form>
 			</div>

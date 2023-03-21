@@ -5,10 +5,13 @@ namespace App\Entity;
 use App\Repository\ShopSerieRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+
 
 /**
  * @ORM\Table(name="sp_shop_series")
  * @ORM\Entity(repositoryClass=ShopSerieRepository::class)
+ * @UniqueEntity(fields={"nombre_comercial"}, message="Este nombre de ya está en uso.")
  */
 class ShopSerie
 {
@@ -21,24 +24,28 @@ class ShopSerie
 
     /**
      * @ORM\ManyToOne(targetEntity=Shop::class, inversedBy="shopSeries")
+     * @ORM\JoinColumn(name="id_shop", referencedColumnName="id_shop")
      */
     private $shop_id;
 
-    /**
-     * @ORM\Column(type="string", length=2)
-     * @Assert\Unique(
-     *     message="El valor debe ser unico"
-     * )
-     */
-    private $tipo_documento;
+    // /**
+    //  * @ORM\Column(type="string", length=2)
+    //  */
+    // private $tipo_documento;
 
     /**
-     * @ORM\Column(type="string", length=11)
+     * @ORM\Column(type="string", length=6)
      */
     private $serie;
+    
+    /**
+     * @ORM\Column(type="string", length=2)
+     * @Assert\Choice({"01", "03","04","05","06","07"})
+     */
+    private $codigo_documento;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=9)
      */
     private $secuencia;
 
@@ -74,14 +81,26 @@ class ShopSerie
         return $this;
     }
 
-    public function getTipoDocumento(): ?string
+    // public function getTipoDocumento(): ?string
+    // {
+    //     return $this->tipo_documento;
+    // }
+
+    // public function setTipoDocumento(string $tipo_documento): self
+    // {
+    //     $this->tipo_documento = $tipo_documento;
+
+    //     return $this;
+    // }
+    
+    public function getCodigoDocumento(): ?string
     {
-        return $this->tipo_documento;
+        return $this->codigo_documento;
     }
 
-    public function setTipoDocumento(string $tipo_documento): self
+    public function setCodigoDocumento(string $codigo_documento): self
     {
-        $this->tipo_documento = $tipo_documento;
+        $this->codigo_documento = $codigo_documento;
 
         return $this;
     }
