@@ -72,6 +72,7 @@ class SaleController extends AbstractController
             $data = $data->find($id);
             $details = $data->getVentaDetails();
             $formas = json_decode($data->getFormaPago());
+            $informacion_adicionales = json_decode($data->getInformacionAdicional());
             foreach($details as $detail){
                 $details_js[] =[
                     'id'   => $detail->getProductId()->getId(),
@@ -88,16 +89,17 @@ class SaleController extends AbstractController
         $root = ($id)? 'edit': 'form';
         
         return $this->render('/Sales/'.$root.'.html.twig', [
-            'data'      => $data, 
-            'shops'     => $shops, 
-            'customers' => $customers, 
-            'series'    => $seri, 
-            'products'  => $products ?? [], 
-            'product'   => $pro ?? [],
-            'formas'    => $formas ?? [],
-            'clients'   => $clients,
-            'details'   => $details,
-            'details_js'=> $details_js
+            'data'          => $data, 
+            'shops'         => $shops, 
+            'customers'     => $customers, 
+            'series'        => $seri, 
+            'products'      => $products ?? [], 
+            'product'       => $pro ?? [],
+            'formas'        => $formas ?? [],
+            'informaciones' => $informacion_adicionales ?? [],
+            'clients'       => $clients,
+            'details'       => $details,
+            'details_js'    => $details_js
         ]);
     }
 
@@ -155,11 +157,13 @@ class SaleController extends AbstractController
                   'plazo'      => $plazo[$key],  
             ];
         }
-
-        $adicional = [
-            'titulo_informacion_adicional'      => $titulo_informacion_adicional,
-            'description_informacion_adicional' => $description_informacion_adicional
-        ];
+        
+        foreach($titulo_informacion_adicional as $key => $form){
+            $adicional[]=[
+                  'titulo_informacion_adicional'        => $titulo_informacion_adicional[$key],  
+                  'description_informacion_adicional'   => $description_informacion_adicional[$key]
+            ];
+        }
 
         $data       = $doctrine->getRepository(ShopSerie::class);
         $shopserie = $data->find($serie);

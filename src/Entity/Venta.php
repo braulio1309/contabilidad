@@ -497,16 +497,6 @@ class Venta
     {
         return $this->informacion_adicional;
     }
-    
-    public function getTituloInformacionAdicional(): ?string
-    {
-        return json_decode($this->informacion_adicional)->titulo_informacion_adicional;
-    }
-    
-    public function getDescriptionInformacionAdicional(): ?string
-    {
-        return json_decode($this->informacion_adicional)->description_informacion_adicional;
-    }
 
     public function setInformacionAdicional(?string $informacion_adicional): self
     {

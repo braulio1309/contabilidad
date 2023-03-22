@@ -257,17 +257,38 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="row mt-3">
-							<div class="col-4">
-								<label for='email'>Información adicional </label>
-								<input type="text" class="form-control" name="titulo_informacion_adicional" placeholder="Ingrese ..." value="{{ (data is null)? '': data.getTituloInformacionAdicional() }}">
+						<div class="row mt-3" id="informacion-adicional">
+							<div class="col-12">
+								<button class="btn btn-primary ml-auto float-right" id="agregar-fila-adicional" type="button">
+										<i class="fas fa-plus"></i>
+								</button>
 							</div>
-							<div class="col-8">
-								<div class='form-group'>
-
-									<textarea class="form-control" name="description_informacion_adicional" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionInformacionAdicional() }}</textarea>
-								</div>
-							</div>
+							<table class="table table-striped m-2" id="tabla-dinamica-informacion">
+								<thead>
+									<tr>
+										<th>Información adicional</th>
+										<th>Descripción</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for info in informaciones %}
+									<tr>
+										<td class="col-4">
+											<input type="text" class="form-control" value="{{ info.titulo_informacion_adicional }}" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
+										</td>
+										<td class="col-7">
+											<textarea class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'>{{ info.description_informacion_adicional }}</textarea>
+										</td>
+										<td class="col-1 text-center">
+											<button class="btn btn-danger eliminar-fila-adicional" type="button">
+												<i class="fas fa-trash"></i>
+											</button>
+										</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
 						</div>
 					</div>
 					<div class="col-2">
@@ -460,9 +481,43 @@
 				
 		});
 
+		$('#agregar-fila-adicional').on('click', function () {
+			let tabla = document.querySelector("#tabla-dinamica-informacion");
+			let cuerpo = tabla.querySelector("tbody");
+
+			// Creamos una nueva fila
+			let fila = document.createElement("tr");
+
+			// Agregamos las celdas
+			fila.innerHTML = `
+								<td class="col-4">
+									<input type="text" class="form-control" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
+								</td>
+								<td class="col-7">
+									<textarea class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'></textarea>
+								</td>
+								<td class="col-1 text-center">
+									<button class="btn btn-danger eliminar-fila-adicional" type="button">
+										<i class="fas fa-trash"></i>
+									</button>
+								</td>
+						`;
+				// Agregamos la fila al cuerpo
+			cuerpo.appendChild(fila);
+				
+		});
+
 		$('table tbody').on('click', '.eliminar-fila', function() {
 			// Verificar si hay más de una fila
 			if ($('#tabla-dinamica tbody tr').length > 1) {
+				// Si hay más de una fila, eliminar la fila actual
+				$(this).closest('tr').remove();
+			}
+		});
+
+		$('table tbody').on('click', '.eliminar-fila-adicional', function() {
+			// Verificar si hay más de una fila
+			if ($('#tabla-dinamica-informacion tbody tr').length > 1) {
 				// Si hay más de una fila, eliminar la fila actual
 				$(this).closest('tr').remove();
 			}
