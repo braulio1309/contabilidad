@@ -103,15 +103,15 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Serie</label>
-								<select class='form-control' name='serie' id="serie">
-								</select>
+								<input type="text" class="form-control" readonly name="serie" value="{{ data.getSerie() }}" id="serie" placeholder="Numero...">
+
 							</div>
 						</div>
 
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='email'>Número</label>
-								<input type="text" class="form-control" readonly name="numeroSerie" value="{{ data.getSerie() }}" id="numeroSerie" placeholder="Numero...">
+								<input type="text" class="form-control" readonly name="numeroSerie" value="{{ data.getSecuencia() }}" id="numeroSerie" placeholder="Numero...">
 							</div>
 						</div>
 					</div>
@@ -135,7 +135,7 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='name'>Fecha autorizacion</label>
-								<input type='date' class='form-control' name='fecha_autorizacion' value='{{ (data is null)? '': data.getFechaAutorizacion() }}' required/>
+								{# <input type='date' class='form-control' name='fecha_autorizacion' value='{{ (data is null)? '': data.getFechaAutorizacion() }}' required/> #}
 
 							</div>
 						</div>
@@ -166,7 +166,7 @@
 							<input type='hidden' value = '{{pro.getDescriptionAditional2()}}' id='descripcion_adicional2{{id}}' name='descripcion_adicional2[]'/>
 							<input type='hidden' value = '{{pro.getDescriptionAditional3()}}' id='descripcion_adicional3{{id}}' name='descripcion_adicional3[]'/>
                             <div class='col-sm-3'>
-                                <select disabled id='{{id}}' class='form-control' name='products[]'>
+                                <select style='pointer-events: none;' id='{{id}}' class='form-control' name='products[]'>
                                     {# {% for row in products %}
                                         <option value='{{row.id}}' {{(pro.getProductId().id is same as(row.id))? 'selected': ''}}>{{row.name}}
                                             -
@@ -176,13 +176,13 @@
                                 </select>
                             </div>
                             <div class='col-sm-2'>
-                                <input id='c{{id}}' type='number' class='form-control c0' step='1' min='0' oninput="actualizarCampos({{id}})" name='items[]' value = '{{pro.getProductQuantity()|number_format(0)}}' placeholder='Cantidad'/>
+                                <input id='c{{id}}' type='number' class='form-control c{{id}}' step='1' min='0' oninput="actualizarCampos({{id}})" name='items[]' value = '{{pro.getProductQuantity()|number_format(0)}}' placeholder='Cantidad'/>
                             </div>
 							<div class='col-sm-2'>
-								<input id='d{{id}}' type='number' class='form-control d{{id}}' oninput="actualizarCampos({{id}}})" value = '{{pro.getProductDescuento()}}' step='1' min='0' name='discounts[]' placeholder='Descuento'/>
+								<input id='d{{id}}' type='number' class='form-control d{{id}}' oninput="actualizarCampos({{id}}})" value = '{{pro.getProductDescuento()|number_format(0)}}' step='1' min='0' name='discounts[]' placeholder='Descuento'/>
 							</div>
 							<div class='col-sm-2'>
-                                <input id='i{{id}}' type='number' class='form-control i0' step='1' min='0' name='impuestos[]' value = '{{pro.getTaxId()|number_format(0)}}' placeholder='Impuesto' readonly/>
+                                <input id='i{{id}}' type='number' class='form-control i{{id}}' step='1' min='0' name='impuestos[]' value = '{{pro.getTaxId()|number_format(0)}}' placeholder='Impuesto' readonly/>
                             </div>
                             <div class='col-sm-2'>
                                 <input id='s{{id}}' type='number' class='form-control' placeholder='Subtotal' name='subtotals[]' value = '{{pro.getProductQuantity() * pro.getProductPrice()}}' readonly/>
@@ -293,34 +293,6 @@
 					</div>
 					<div class="col-2">
 						<div class="d-flex flex-row-reverse">
-							<div class="p-2">
-								<label>Descuento %</label>
-								<input type='number' id='discount' name='discount' class='form-control' value='0'>
-							</div>
-						</div>
-						<div class="d-flex flex-row-reverse">
-							<div class="p-2">
-								<label>Subtotal</label>
-								<input type='number' id='subtotal' class='form-control' value='0' name='subtotalFinal' readonly>
-							</div>
-						</div>
-
-						<div class="d-flex flex-row-reverse">
-							<div class="p-2">
-								<label>Impuesto</label>
-								<input type='number' id='impuestoFinal' class='form-control' value='0' name='impuestoFinal' readonly>
-							</div>
-						</div>
-
-						<div class="d-flex flex-row-reverse">
-							<div class="p-2">
-								<label>Total</label>
-								<input type='number' id='total' class='form-control' value='0' name='total' readonly>
-							</div>
-						</div>
-					</div>
-				</div>
-					<div class="d-flex flex-row-reverse">
 						<div class="p-2">
 							<label>Descuento %</label>
 							<input type='number' value='{{data.getDescuento()}}' id='discount' name='discount' class='form-control' value='0'>
@@ -349,6 +321,9 @@
 							<input type='number' value='{{data.getTotal()}}' id='total' class='form-control' value='0' name='total' readonly>
 						</div>
 					</div>
+					</div>
+				</div>
+					
 
 
 					<input type="submit" class='btn btn-primary' value='{{ (data is null)? 'Crear': 'Actualizar' }}'/>

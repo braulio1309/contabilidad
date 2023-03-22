@@ -252,37 +252,66 @@ class SaleController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($sale);
         $em->flush();
-        // dd($details);
         
-        $tipo = $request->get('tipo_identificacion');
-        $email = $request->get('email');
-        $numero = $request->get('numero_identificacion');
-        $description = $request->get('description');
-        $ambiente = $request->get('ambiente');
-        $customer = $request->get('customer');
-        $xmlEstado = $request->get('xml_estado');
-        $fechaAutorizacion = $request->get('fecha_autorizacion');
-        $fechaAutorizacion = new \DateTime($fechaAutorizacion);
-        $fechaEmision = $request->get('fecha_emision');
-        $fechaEmision = new \DateTime($fechaEmision);
-        $products = $request->get('products');
-        $items = $request->get('items');
-        $subtotals = $request->get('subtotals');
-        $discount = $request->get('discount');
-        $total = $request->get('total');
-        $descripcion = $request->get('descripcion');
-        $descripcion_adicional = $request->get('descripcion_adicional1');
+        $tipo                   = $request->get('tipo_identificacion');
+        $email                  = $request->get('email');
+        $numero                 = $request->get('numero_identificacion');
+        $description            = $request->get('description');
+        $ambiente               = $request->get('ambiente');
+        $customer               = $request->get('customer');
+        $xmlEstado              = $request->get('xml_estado');
+        $fechaAutorizacion      = $request->get('fecha_autorizacion');
+        $fechaAutorizacion      = new \DateTime($fechaAutorizacion);
+        $fechaEmision           = $request->get('fecha_emision');
+        $fechaEmision           = new \DateTime($fechaEmision);
+        $products               = $request->get('products');
+        $items                  = $request->get('items');
+        $discounts              = $request->get('discounts');
+        $subtotals              = $request->get('subtotals');
+        $discount               = $request->get('discount');
+        $total                  = $request->get('total');
+        $shop                   = $request->get('shop');
+        $subtotal               = $request->get('subtotalFinal');
+        $descripcion            = $request->get('descripcion');
+        $descripcion_adicional  = $request->get('descripcion_adicional1');
         $descripcion_adicional2 = $request->get('descripcion_adicional2');
         $descripcion_adicional3 = $request->get('descripcion_adicional3');
-        $shop = $request->get('shop');
-        $subtotal = $request->get('subtotalFinal');
-        $discount = $request->get('discount');
-        $ambiente = $request->get('ambiente');
-        $tipoEmision = $request->get('tipoEmision');
-        $impuesto = $request->get('impuestoFinal');
-        $impuestos = $request->get('impuestos');
+        $discount               = $request->get('discount');
+        $impuesto               = $request->get('impuestoFinal');
+        $impuestos              = $request->get('impuestos');
+        $ambiente               = $request->get('ambiente');
+        $tipoEmision            = '1';
+        $serie                  = $request->get('serie');
+        $numeroSerie            = $request->get('numeroSerie');
+        $codigoDocumento        = $request->get('codigoDocumento');
+
+        $forma_pago             = $request->get('forma_pago');
+        $valor                  = $request->get('valor');
+        $tiempo                 = $request->get('tiempo');
+        $plazo                  = $request->get('plazo');
+
+        $titulo_informacion_adicional       = $request->get('titulo_informacion_adicional');
+        $description_informacion_adicional  = $request->get('description_informacion_adicional');   
+
+
+        foreach($forma_pago as $key => $form){
+            $forma[]=[
+                  'forma_pago' => $forma_pago[$key],  
+                  'valor'      => $valor[$key],  
+                  'tiempo'     => $tiempo[$key],  
+                  'plazo'      => $plazo[$key],  
+            ];
+        }
+        
+        foreach($titulo_informacion_adicional as $key => $form){
+            $adicional[]=[
+                  'titulo_informacion_adicional'        => $titulo_informacion_adicional[$key],  
+                  'description_informacion_adicional'   => $description_informacion_adicional[$key]
+            ];
+        }
 
         $sale->setTipoIdentificacion($tipo);
+        $sale->setCodigoDocumento($codigoDocumento);
         $sale->setEmail($email);
         $sale->setNumeroIdentificacion($numero);
         // $sale->setTipoDocumento($tipo);
@@ -294,18 +323,21 @@ class SaleController extends AbstractController
         $sale->setCustomerId($customer);
         $sale->setXmlEstado($xmlEstado);
         $sale->setFechaEmision($fechaEmision);
+        $sale->setAddress1($customer->getAddress1());
+        $sale->setFormaPago(json_encode($forma));
+        $sale->setInformacionAdicional(json_encode($adicional));
         $sale->setFechaAutorizacion($fechaAutorizacion);
         $sale->setTotal($total);
         $sale->setSubtotal($subtotal);
         $sale->setDescuento($discount);
+        $sale->setSerie($serie);
+        $sale->setSecuencia($numeroSerie);
         $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
-        $sale->setClaveAcceso(substr(str_shuffle($permitted_chars), 0, mt_rand(0, 100)));
         $sale->setAmbiente($ambiente);
         $sale->setTipoEmision(strval($tipoEmision));
         $sale->setDescuento($discount);
         $sale->setIdTax((float) $impuesto);
 
-        $sale->setCreatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
         $sale->setUpdatedAt(new \DateTimeImmutable(date('d-m-Y H:i:s')));
 
         $i = 0;
@@ -316,14 +348,15 @@ class SaleController extends AbstractController
             $saleDetail = new VentaDetail();
             $saleDetail->setProductPrice($productEntity->getPrice());
             $saleDetail->setProductSubtotal($subtotals[$i]);
-            $saleDetail->setProductQuantity($items[$i]);
-            $saleDetail->setCodigoProducto($productEntity->getCode());
-            $saleDetail->setProductId($productEntity);
             $saleDetail->setDescription($descripcion[$i]);
             $saleDetail->setDescriptionAditional1($descripcion_adicional[$i]);
             $saleDetail->setDescriptionAditional2($descripcion_adicional2[$i]);
             $saleDetail->setDescriptionAditional3($descripcion_adicional3[$i]);
+            $saleDetail->setProductQuantity($items[$i]);
+            $saleDetail->setProductDescuento($discounts[$i] ?? 0);
             $saleDetail->setProductTotal($subtotals[$i]-$impuestos[$i]);
+            $saleDetail->setCodigoProducto($productEntity->getCode());
+            $saleDetail->setProductId($productEntity);
             $saleDetail->setTaxId((float) $impuestos[$i]);
 
             $i++;
