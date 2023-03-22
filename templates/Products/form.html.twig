@@ -75,7 +75,7 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='description1'>Descripción adicional 1</label>
-								<textarea class="form-control" maxlength="300" required oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
+								<textarea class="form-control" maxlength="300" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description1" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional1() }}</textarea>
 								{% if errors and errors['description1'] is defined %}
 									<div class="invalid-feedback d-block">{{errors['description1'] }}</div>
 								{% endif %}
@@ -84,7 +84,7 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='description2'>Descripción adicional 2</label>
-								<textarea class="form-control" maxlength="300" required oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
+								<textarea class="form-control" maxlength="300" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description2" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional2() }}</textarea>
 								{% if errors and errors['description2'] is defined %}
 									<div class="invalid-feedback d-block">{{errors['description2'] }}</div>
 								{% endif %}
@@ -93,7 +93,7 @@
 						<div class='col-sm-4'>
 							<div class='form-group'>
 								<label for='description3'>Descripción adicional 3</label>
-								<textarea class="form-control" maxlength="300" required oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description3" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
+								<textarea class="form-control" maxlength="300" oninput="this.value = this.value.replace(/[\n]/g, '').replace(/(\..*)\./g, '$1');" name="description3" form="products" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getDescriptionAditional3() }}</textarea>
 								{% if errors and errors['description3'] is defined %}
 									<div class="invalid-feedback d-block">{{errors['description3'] }}</div>
 								{% endif %}
