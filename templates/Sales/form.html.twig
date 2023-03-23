@@ -10,20 +10,20 @@
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='name'>Tipo Identificación</label>
-							<input id='tipo_identificacion' type='text' class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
+							<input id='tipo_identificacion' type='text' required class='form-control' name='tipo_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' style='pointer-events: none; background-color: #eaecf4; opacity: 1;'/>
 						</div>
 					</div>
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='lastname'>Número Identificación</label>
-							<input id='numero_identificacion' type='text' class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' readonly/>
+							<input id='numero_identificacion' type='text' required class='form-control' name='numero_identificacion' value='{{ (data is null)? '': data.getNumeroIdentificacion() }}' style='pointer-events: none; background-color: #eaecf4; opacity: 1;'/>
 						</div>
 					</div>
 
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='lastname'>Email</label>
-							<input id='email' type='email' class='form-control' name='email' value='{{ (data is null)? '': data.email }}' readonly/>
+							<input id='email' type='email' class='form-control' required name='email' value='{{ (data is null)? '': data.email }}' style='pointer-events: none; background-color: #eaecf4; opacity: 1;'/>
 						</div>
 					</div>
 				</div>
@@ -32,7 +32,7 @@
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='email'>Tienda</label>
-							<select class='form-control' name='shop' id="shop" onchange="getSeries()">
+							<select class='form-control' required name='shop' id="shop" onchange="getSeries()">
 								{% for row in shops %}
 									<option value='{{row.id}}' {{(data is not null and data.getShopId().id is same as(row.id))? 'selected': ''}}>{{row.name}}</option>
 								{% endfor %}
@@ -42,8 +42,8 @@
 
 					<div class='col-sm-4'>
 						<div class='form-group'>
-							<label for='email'>Ambiente</label>
-							<select class='form-control' name='ambiente'>
+							<label for='ambiente'>Ambiente</label>
+							<select class='form-control' name='ambiente' required>
 								<option value='1'>Pruebas</option>
 								<option value='2'>Producción</option>									
 							</select>
@@ -54,8 +54,8 @@
 						<div class='form-group mb-0 pb-0'>
 							<label for='email'>Cliente</label>
 							
-							<input type="text" class="form-control" onkeyup="searchCustomer()" id="cliente" placeholder="Buscar cliente...">
-							<input type="hidden" class="form-control" name="customer" id="client">
+							<input type="text"  required class="form-control" onkeyup="searchCustomer()" id="cliente" placeholder="Buscar cliente...">
+							<input type="hidden" required class="form-control" name="customer" id="client">
 						</div>
 						<ul class="list-group list-unstyled w-100 overflow-auto" id="myMenuCustomer" style="max-height:120px;position: absolute; z-index: 9999;">
 						</ul>
@@ -70,7 +70,7 @@
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='email'>Tipo</label>
-							<select class='form-control' name='codigoDocumento' id="codigoDocumento" onchange="getSeries()">
+							<select class='form-control' required name='codigoDocumento' id="codigoDocumento" onchange="getSeries()">
 								<option value='01'>Factura</option>
 								<option value='03'>Liquidación</option>
 								<option value='04'>Nota de crédito</option>
@@ -84,7 +84,7 @@
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='email'>Serie</label>
-							<select class='form-control' name='serie' id="serie">
+							<select class='form-control' name='serie' id="serie" required>
 							</select>
 						</div>
 					</div>
@@ -92,7 +92,7 @@
 					<div class='col-sm-4'>
 						<div class='form-group'>
 							<label for='email'>Número</label>
-							<input type="text" class="form-control" readonly name="numeroSerie" id="numeroSerie" placeholder="Numero...">
+							<input type="text" class="form-control" style='pointer-events: none; background-color: #eaecf4; opacity: 1;' name="numeroSerie" id="numeroSerie" placeholder="Numero...">
 						</div>
 					</div>
 				</div>
@@ -222,10 +222,10 @@
 								<tbody>
 									<tr>
 										<td class="col-4">
-											<input type="text" class="form-control" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
+											<input required type="text" class="form-control" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
 										</td>
 										<td class="col-7">
-											<textarea class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
+											<textarea required class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
 										</td>
 										<td class="col-1 text-center">
 											<button class="btn btn-danger eliminar-fila-adicional" type="button">
@@ -485,10 +485,10 @@
 			// Agregamos las celdas
 			fila.innerHTML = `
 								<td class="col-4">
-									<input type="text" class="form-control" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
+									<input required type="text" class="form-control" name="titulo_informacion_adicional[]" placeholder="Ingrese ...">
 								</td>
 								<td class="col-7">
-									<textarea class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
+									<textarea required class="form-control" name="description_informacion_adicional[]" form="sales" rows="3" placeholder='Descripcion'>{{ (data is null)? '': data.getInformationAdicional() }}</textarea>
 								</td>
 								<td class="col-1 text-center">
 									<button class="btn btn-danger eliminar-fila-adicional" type="button">
@@ -576,7 +576,7 @@
 				})
 			var select = document.getElementById("serie");
 			select.options.length = 0;
-			select.options[select.options.length] = new Option("Seleccione una serie","-1")
+			select.options[select.options.length] = new Option("Seleccione una serie","")
 			for(let k = 0; k < series_view.length; k++){
 				select.options[select.options.length] = new Option(series_view[k].serie, series_view[k].id);
 			}
@@ -612,10 +612,10 @@
 						</select>
 					</div>
 					<div class='col-sm-2'>
-						<input id='c${i}' type='number' value='${qty}' class='form-control c${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='items[]' placeholder='Cantidad'/>
+						<input id='c${i}' required type='number' value='${qty}' class='form-control c${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='items[]' placeholder='Cantidad'/>
 					</div>
 					<div class='col-sm-2'>
-						<input id='d${i}' type='number' value='0' class='form-control d${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='discounts[]' placeholder='Descuento'/>
+						<input id='d${i}' required type='number' value='0' class='form-control d${i}' oninput="actualizarCampos(${i})" step='1' min='0' name='discounts[]' placeholder='Descuento'/>
 					</div>
 					<div class='col-sm-2'>
 						<input id='i${i}' type='number' class='form-control i${i}' step='1' min='0' name='impuestos[]' placeholder='Impuesto' readonly/>
@@ -664,6 +664,9 @@
 		
 		searchCustomer =  () => {
 			const value = document.getElementById("cliente").value;
+			document.getElementById("tipo_identificacion").value="";
+			document.getElementById("numero_identificacion").value="";
+			document.getElementById("email").value="";
 			ul = document.getElementById("myMenuCustomer");
 			ul.style.display= "block";
 			ul.innerHTML= "";
