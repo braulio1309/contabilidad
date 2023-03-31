@@ -386,7 +386,7 @@
 		var series = parseJSON('{{ series | json_encode }}');
 		var products = parseJSON('{{ product | json_encode }}');
 		var details_js = parseJSON('{{ details_js | json_encode }}');
-		var products_add = details;
+		var products_add = details_js;
 
 		function parseJSON(input) {
 			let output = input.replace(/&quot;/ig,'"');
