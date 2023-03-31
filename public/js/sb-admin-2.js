@@ -13,7 +13,9 @@
   // Close any open menu accordions when window is resized below 768px
   $(window).resize(function() {
     if ($(window).width() < 768) {
-      $('.sidebar .collapse').collapse('hide');
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
     };
     
     // Toggle the side navigation when window is resized below 480px
@@ -22,6 +24,8 @@
       $(".sidebar").addClass("toggled");
       $('.sidebar .collapse').collapse('hide');
     };
+
+    
   });
 
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
@@ -32,6 +36,35 @@
       this.scrollTop += (delta < 0 ? 1 : -1) * 30;
       e.preventDefault();
     }
+  });
+
+  $(window).on('load resize', function() {
+    if ($(window).width() <= 768) {
+      if (!$("body").hasClass("sidebar-toggled")) {
+        $("body").addClass("sidebar-toggled");
+      };
+      if (!$(".sidebar").hasClass("toggled")) {
+        $(".sidebar").addClass("toggled");
+      };
+      
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
+    }
+    
+    if ($(window).width() > 768) {
+      if ($("body").hasClass("sidebar-toggled")) {
+        $("body").removeClass("sidebar-toggled");
+      };
+      if ($(".sidebar").hasClass("toggled")) {
+        $(".sidebar").removeClass("toggled");
+      };
+      
+      if ($(".sidebar").hasClass("toggled")) {
+        $('.sidebar .collapse').collapse('hide');
+      };
+    }
+    
   });
 
   // Scroll to top button appear
