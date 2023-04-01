@@ -185,7 +185,6 @@ class SaleController extends AbstractController
         $sale->setAddress1($customer->getAddress1());
         $sale->setFormaPago(json_encode($forma));
         $sale->setInformacionAdicional(json_encode($adicional));
-        // $sale->setFechaAutorizacion($fechaAutorizacion);
         $sale->setTotal($total);
         $sale->setSubtotal($subtotal);
         $sale->setDescuento($discount);
@@ -232,9 +231,16 @@ class SaleController extends AbstractController
             $em->persist($shopserie);
             $em->flush();
             $session->getFlashBag()->add('success', 'Venta creada con éxito');
-        }else {
-            $session->getFlashBag()->add('error', 'No se pudo crear el Saleo');
+        }else{
+            // $errores=[];
+            // foreach($errors as $error){
+            //     $errores[$error->getpropertyPath()] = $error->getMessage();
+            // }
+            $session->getFlashBag()->add('error', 'Error al crear la Venta');
+
+            // return $this->render('/Sales/form.html.twig', ['errors' => $errores, 'data' => $sale,'type' =>'POST']); 
         }
+        
         
         return $this->redirectToRoute('list_sales');
     }

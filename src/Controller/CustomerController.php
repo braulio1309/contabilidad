@@ -44,7 +44,6 @@ class CustomerController extends AbstractController
         $session = $request->getSession();        
         $session->start();
         $type= !empty($request->get('type')) ? 'sale' : 'customer';
-
         $email = $request->get('email');
         $company = $request->get('customer');
         $address = $request->get('address');

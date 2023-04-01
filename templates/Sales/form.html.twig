@@ -337,7 +337,7 @@
 							<div class='col-sm-6'>
 								<div class='form-group'>
 									<label for='name'>Tipo Identificación</label>
-									<select class='form-control' name='tipo_identificacion'>
+									<select class='form-control' name='tipo_identificacion' id="tipo_identificacion_cliente">
 										<option value='04'>RUC</option>
 										<option value='05'>Cedula</option>
 										<option value='06'>Pasaporte</option>
@@ -346,9 +346,9 @@
 								</div>
 							</div>
 							<div class='col-sm-6'>
-								<div class='form-group'>
+								<div class='form-group div-num-ident'>
 									<label for='lastname'>Número Identificación</label>
-									<input type='text' maxlength="15" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').replace(/(\..*)\./g, '$1');"  class='form-control' name='numero_identificacion' required/>
+									<input type='text' maxlength="15" oninput="this.value = this.value.replace(/[^0-9A-Za-z]/g, '').replace(/(\..*)\./g, '$1');"  class='form-control' name='numero_identificacion' id="numero_identificacion_cliente" required/>
 								</div>
 							</div>
 						</div>
@@ -400,7 +400,76 @@
 		</div>
 	</div>
 
+	<script src="{{asset('js/validacion.js')}}"></script>
+
 	<script>
+
+		$('#form').on('submit', function(e) {
+			e.preventDefault();
+			$('.form-group .text-danger').remove();
+			let tipoIdentificacion= document.getElementById("tipo_identificacion_cliente").value;
+			let numeroIdentificacion= document.getElementById("numero_identificacion_cliente").value;
+			console.log(numeroIdentificacion);
+			let flag=true;
+			if(tipoIdentificacion=='04'){
+				if(validarRucPersonaNatural(numeroIdentificacion) || 
+					validarRucSociedadPrivada(numeroIdentificacion) ||
+					validarRucSociedadPublica(numeroIdentificacion)){
+					flag=true;
+				}else{
+					flag=false;
+				};
+			}else{
+				if(tipoIdentificacion=='05'){
+					if(validarCedula(numeroIdentificacion)){
+						flag=true;
+					}else{
+						flag=false;
+					}
+				}
+			}
+			let email_validate = validateMultipleEmails($('#emails').val());
+			if(email_validate && flag){
+				$('#form')[0].submit();
+			}else if(!flag){
+				$('.div-num-ident').append('<p class="text-danger">Número identificacion invalido </p>');
+			}
+			
+		})
+
+
+		function validateMultipleEmails(emailInput) {
+			// Get value on emails input as a string
+			var emails = emailInput;
+			
+			// Split string by comma into an array
+			emails = emails.split(";");
+
+			var valid = true;
+			var regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+			
+			var invalidEmails = [];
+			
+			for (var i = 0; i < emails.length; i++) {
+				// Trim whitespaces from email address
+				emails[i] = emails[i].trim();
+				
+				// Check email against our regex to determine if email is valid
+				if( emails[i] == "" || ! regex.test(emails[i])){
+					invalidEmails.push(emails[i]);
+				}
+			}
+			
+			// Output invalid emails
+			if(invalidEmails != 0) {
+				$('.div-emails').append('<p class="text-danger">Correo invalido: ' + invalidEmails.join('; ') + '</p>');
+			}else{
+				return true;
+				//$('#form')[0].submit();
+			}
+
+		}
+
 		let textFields = document.querySelectorAll("#exampleModal .modal-body textarea");
 		textFields.forEach(function(field) {
 			field.addEventListener("keyup", function(e) {
@@ -409,7 +478,6 @@
 				$("#desc_pr" + id).text("Caracteres: " + count);
 			});
 		});
-
 		let i = -1;
 		var id = null;
 		
