@@ -143,31 +143,30 @@ function validarCedula(numero = '') {
   function algoritmoModulo10(digitosIniciales, digitoVerificador) {
     const arrayCoeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
   
-    digitoVerificador = Number(digitoVerificador);
-    digitosIniciales = digitosIniciales.split('');
+    digitoVerificador = parseInt(digitoVerificador);
+    digitosIniciales = digitosIniciales.split("");
   
     let total = 0;
     digitosIniciales.forEach((value, key) => {
-      let valorPosicion = Number(value) * arrayCoeficientes[key];
+      let valorPosicion = parseInt(value) * arrayCoeficientes[key];
   
       if (valorPosicion >= 10) {
-        valorPosicion = String(valorPosicion)
-          .split('')
-          .reduce((acc, cur) => Number(acc) + Number(cur), 0);
+        valorPosicion = valorPosicion.toString().split("").reduce((a, b) => parseInt(a) + parseInt(b));
       }
   
       total += valorPosicion;
     });
   
     const residuo = total % 10;
-    const resultado = residuo === 0 ? 0 : 10 - residuo;
   
+    const resultado = residuo === 0 ? 0 : 10 - residuo;
     if (resultado !== digitoVerificador) {
-      throw new Error('Dígitos iniciales no validan contra Dígito Idenficador');
+      throw new Error("Dígitos iniciales no validan contra Dígito Idenficador");
     }
   
     return true;
   }
+  
 
   function algoritmoModulo11(digitosIniciales, digitoVerificador, tipo) {
     let arrayCoeficientes;

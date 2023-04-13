@@ -7,25 +7,50 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\customerPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
-use App\Trait\CustomerTrait;
+use App\Traits\CustomerTrait;
 use App\Entity\Customer;
 use App\Repository\CustomerRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 class CustomerController extends AbstractController
 {
     use CustomerTrait;
 
-    public function index(Request $request, ManagerRegistry $doctrine)
+    public function index(Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator)
     {
-        $data = $doctrine->getRepository(Customer::class);
+    $queryBuilder = $doctrine->getRepository(Customer::class)->createQueryBuilder('c');
 
-        $data = $data->findAll();
-        
-        return $this->render('/Customers/index.html.twig', ['data' => $data]);
+    if ($searchTerm = $request->query->get('search')) {
+        $queryBuilder->where('c.numero_identificacion LIKE :searchTerm')
+            ->orWhere('c.company LIKE :searchTerm')
+            ->orWhere('c.address1 LIKE :searchTerm')
+            ->orWhere('c.email LIKE :searchTerm')
+            ->orWhere('c.phone LIKE :searchTerm')
+            ->setParameter('searchTerm', '%'.$searchTerm.'%');
+    }
+    
+    $data = $queryBuilder->getQuery()->getResult();
+    $pagination = $paginator->paginate(
+        $data,
+        $request->query->getInt('page', 1),
+        $request->query->get('limit_per_page') ?? 10 // número de elementos por página
+    );
+    
+    $total_pages    = $pagination->getPageCount();
+    $current_page   = $pagination->getCurrentPageNumber();
+    $limit_per_page = $pagination->getItemNumberPerPage();
+    $my_route       = $request->attributes->get('_route');
+
+    return $this->render('/Customers/index.html.twig', [ 'data' => $pagination,
+                                                        'total_pages' => $total_pages,
+                                                        'current_page' => $current_page,
+                                                        'limit_per_page' => $limit_per_page,
+                                                        'my_route' => $my_route
+                        ]);
     }
 
     public function showForm($id, ManagerRegistry $doctrine)

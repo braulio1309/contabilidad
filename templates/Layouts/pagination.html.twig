@@ -1,0 +1,29 @@
+<nav>
+    <ul class="pagination justify-content-right float-right">
+        {% if current > 1 %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path(route, {'page': current - 1}) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Anterior</span>
+            </a>
+        </li>
+        {% endif %}
+        {% for i in 1..total %}
+        {% if i == current %}
+        <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+        {% else %}
+        {% if i >= current - 2 and i <= current + 2 %}
+        <li class="page-item"><a class="page-link" href="{{ path(route, {'page': i}) }}">{{ i }}</a></li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        {% if current < total %}
+        <li class="page-item">
+            <a class="page-link" href="{{ path(route, {'page': current + 1}) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Siguiente</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

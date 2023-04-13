@@ -95,6 +95,12 @@
 
 					</tbody>
 				</table>
+				{% include 'Layouts/pagination.html.twig' with {
+				total: total_pages,
+				current: current_page,
+				limit: limit_per_page,
+				route: my_route
+			} %}
 			</div>
 		</div>
 	</div>

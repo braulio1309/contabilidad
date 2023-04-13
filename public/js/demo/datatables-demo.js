@@ -40,15 +40,14 @@ var idioma=
 // Call the dataTables jQuery plugin
 $(document).ready(function() {
   $('#dataTable').DataTable( {
-    "paging": true,
-    "lengthChange": true,
-    "searching": true,
+    "paging": false,
+    "lengthChange": false,
+    "searching": false,
     "ordering": true,
-    "info": true,
+    "info": false,
 	"order": [[0,'desc']],
-    "autoWidth": true,
+    "autoWidth": false,
     "language": idioma,
-    "lengthMenu": [[10,20, -1],[10,50,"Mostrar Todo"]],
     dom: 'lBfrtipF<"float-right">',
     buttons: {
           dom: {
@@ -74,7 +73,7 @@ $(document).ready(function() {
                               Array(doc.content[1].table.body[0].length + 1).join('*').split('');
                           doc.defaultStyle.alignment = 'center';
                           doc.styles.tableHeader.alignment = 'center';
-                          doc.styles.tableHeader.fontSize = 16;
+                          doc.styles.tableHeader.fontSize = 14;
                         }
                     },
                     {

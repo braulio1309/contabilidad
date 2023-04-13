@@ -6,28 +6,49 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\customerPasswordHasherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Trait\CustomerTrait;
+use App\Traits\CustomerTrait;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use App\Entity\Shop;
 use App\Repository\ShopRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 
 class ShopController extends AbstractController
 {
     use CustomerTrait;
 
-    public function index(Request $request, ManagerRegistry $doctrine)
+    public function index(Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator)
     {
+    $queryBuilder = $doctrine->getRepository(Shop::class)->createQueryBuilder('c');
 
-        $data = $doctrine->getRepository(Shop::class);
+    if ($searchTerm = $request->query->get('search')) {
+        $queryBuilder->where('c.numero_identificacion LIKE :searchTerm')
+            ->orWhere('c.name LIKE :searchTerm')
+            ->orWhere('c.email LIKE :searchTerm')
+            ->setParameter('searchTerm', '%'.$searchTerm.'%');
+    }
+    
+    $data = $queryBuilder->getQuery()->getResult();
+    $pagination = $paginator->paginate(
+        $data,
+        $request->query->getInt('page', 1),
+        $request->query->get('limit_per_page') ?? 10 // número de elementos por página
+    );
+    
+    $total_pages    = $pagination->getPageCount();
+    $current_page   = $pagination->getCurrentPageNumber();
+    $limit_per_page = $pagination->getItemNumberPerPage();
+    $my_route       = $request->attributes->get('_route');
 
-        $data = $data->findAll();
-
-        
-        return $this->render('/Shops/index.html.twig', ['data' => $data]);
+    return $this->render('/Shops/index.html.twig', [ 'data' => $pagination,
+                                                        'total_pages' => $total_pages,
+                                                        'current_page' => $current_page,
+                                                        'limit_per_page' => $limit_per_page,
+                                                        'my_route' => $my_route
+                        ]);
     }
 
     public function showForm($id, ManagerRegistry $doctrine)

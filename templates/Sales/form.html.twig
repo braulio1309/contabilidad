@@ -403,13 +403,12 @@
 	<script src="{{asset('js/validacion.js')}}"></script>
 
 	<script>
-
 		$('#form').on('submit', function(e) {
 			e.preventDefault();
 			$('.form-group .text-danger').remove();
 			let tipoIdentificacion= document.getElementById("tipo_identificacion_cliente").value;
+			console.log(tipoIdentificacion)
 			let numeroIdentificacion= document.getElementById("numero_identificacion_cliente").value;
-			console.log(numeroIdentificacion);
 			let flag=true;
 			if(tipoIdentificacion=='04'){
 				if(validarRucPersonaNatural(numeroIdentificacion) || 
@@ -428,6 +427,7 @@
 					}
 				}
 			}
+			console.log(flag)
 			let email_validate = validateMultipleEmails($('#emails').val());
 			if(email_validate && flag){
 				$('#form')[0].submit();

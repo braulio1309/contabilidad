@@ -33,8 +33,39 @@
 
 	</div>
 	<div class="card-body">
+		<form action="{{ path(my_route) }}" method="GET" id="form" class="form py-2 my-lg-0">
+			<div class="row">
+
+				<div class="col-sm-12 col-lg-3 col-md-3">
+					<div class="form-group row">
+						<label class="col-sm-12 col-lg-3 col-md-3 col-xs-12 px-0 ml-2 col-form-label">Mostrar</label>
+						<select class="form-control mr-sm-2 col-sm-12 col-lg-4 col-md-4 col-xs-12" name="limit_per_page" id="limit_per_page">
+							<option value="10" {{limit_per_page and 10 is same as(limit_per_page)? 'selected': ''}}>10</option>
+							<option value="25" {{limit_per_page and 25 is same as(limit_per_page)? 'selected': ''}}>25</option>
+							<option value="50" {{limit_per_page and 50 is same as(limit_per_page)? 'selected': ''}}>50</option>
+							<option value="100" {{limit_per_page and 100 is same as(limit_per_page)? 'selected': ''}}>100</option>
+						</select>
+						<label class="col-sm-12 col-lg-4 col-md-4 col-xs-12 col-form-label">registros</label>
+					</div>
+				</div>
+
+				<div class="col-sm-12 col-lg-3 col-md-3">
+					<input type="hidden" name="page" id="current_page" value="{{ current_page }}">
+					<input class="form-control mr-sm-2" type="search" name="search" id="search" placeholder="Buscar..." aria-label="Search">
+				</div>
+				
+				
+				<div class="col-sm-12 col-lg-2 col-md-2 col-xs-12">
+					<button class="btn btn-sm btn-outline-success my-2 my-sm-0" data-toggle="tooltip" data-placement="top" title="Buscar" type="submit"><i class="fa fa-search"></i></button>
+					<button id="btn-clean-filter" class="btn btn-sm btn-outline-danger my-2 my-sm-0" data-toggle="tooltip" data-placement="top" title="Limpiar filtro" type="submit"><i class="fa fa-trash"></i></button>
+				</div>
+				
+			</div>
+
+
+		</form>
 		<div class="table-responsive">
-			<table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+			<table class="table table-bordered" id="dataTable"  width="100%" cellspacing="0">
 				<thead>
 					<tr>
 						<th>#</th>
@@ -46,17 +77,6 @@
 						<th>Acciones</th>
 					</tr>
 				</thead>
-				<tfoot>
-					<tr>
-						<th>#</th>
-						<th>Nombre</th>
-						<th>Identificacion</th>
-						<th>Email</th>
-						<th>Telefono</th>
-						<th>Ciudad</th>
-						<th>Acciones</th>
-					</tr>
-				</tfoot>
 				<tbody>
 					{% for row in data %}
 
@@ -104,9 +124,22 @@
 
 				</tbody>
 			</table>
+			{% include 'Layouts/pagination.html.twig' with {
+				total: total_pages,
+				current: current_page,
+				limit: limit_per_page,
+				route: my_route
+			} %}
 		</div>
 	</div>
-</div></div><script>
-$(document).ready(function () {
-$('#example').DataTable();
-});</script>{% endblock %}
+</div></div>
+<script>
+
+	$('#btn-clean-filter').on('click', function(e) {
+			e.preventDefault();
+			document.getElementById("search").value="";
+			document.getElementById("current_page").value=1;
+			$('#form').submit();
+	})
+	
+</script>{% endblock %}

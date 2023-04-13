@@ -17,17 +17,39 @@ use App\Entity\Product;
 use App\Entity\ShopSerie;
 use App\Entity\Taxes;
 use App\Entity\VentaDetail;
+use Knp\Component\Pager\PaginatorInterface;
 
 class SaleController extends AbstractController
 {
     
-    public function index(Request $request, ManagerRegistry $doctrine)
+    public function index(Request $request, ManagerRegistry $doctrine, PaginatorInterface $paginator)
     {
-        $data = $doctrine->getRepository(Venta::class);
+    $queryBuilder = $doctrine->getRepository(Venta::class)->createQueryBuilder('c');
 
-        $data = $data->findBy(array(), array('id' => 'desc'));
-        // dd($data);
-        return $this->render('/Sales/index.html.twig', ['data' => $data]);
+    if ($searchTerm = $request->query->get('search')) {
+        $queryBuilder->where('c.numero_identificacion LIKE :searchTerm')
+            ->orWhere('c.email LIKE :searchTerm')
+            ->setParameter('searchTerm', '%'.$searchTerm.'%');
+    }
+    
+    $data = $queryBuilder->getQuery()->getResult();
+    $pagination = $paginator->paginate(
+        $data,
+        $request->query->getInt('page', 1),
+        $request->query->get('limit_per_page') ?? 10 // número de elementos por página
+    );
+    
+    $total_pages    = $pagination->getPageCount();
+    $current_page   = $pagination->getCurrentPageNumber();
+    $limit_per_page = $pagination->getItemNumberPerPage();
+    $my_route       = $request->attributes->get('_route');
+
+    return $this->render('/Sales/index.html.twig', [ 'data' => $pagination,
+                                                        'total_pages' => $total_pages,
+                                                        'current_page' => $current_page,
+                                                        'limit_per_page' => $limit_per_page,
+                                                        'my_route' => $my_route
+                        ]);
     }
 
     public function showForm($id, ManagerRegistry $doctrine)
