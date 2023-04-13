@@ -49,7 +49,8 @@ class CustomerController extends AbstractController
                                                         'total_pages' => $total_pages,
                                                         'current_page' => $current_page,
                                                         'limit_per_page' => $limit_per_page,
-                                                        'my_route' => $my_route
+                                                        'my_route'       => $my_route,
+                                                        'search'         => $searchTerm ?? ''
                         ]);
     }
 
